@@ -35,7 +35,6 @@ public class loginController {
         String name = (String) userMap.get("username");
         String password = (String) userMap.get("password");
         University uni = null;
-        System.out.println("TEST");
         try{
             uni = universityService.validateUniversity(name,password);
         }
