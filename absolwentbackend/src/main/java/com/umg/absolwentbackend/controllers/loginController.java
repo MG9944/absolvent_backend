@@ -58,7 +58,7 @@ public class loginController {
                 .setIssuedAt(new Date(timestamp))
                 .setExpiration(new Date(timestamp + Constants.TOKEN_VALIDITY))
                 .claim("login", university.getLogin())
-                .claim("passwe", university.getPassword())
+                .claim("password", university.getPassword())
                 .claim("frequency", university.getQuestionnaireFrequency())
                 .compact();
         return token;
