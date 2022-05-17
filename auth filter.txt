@@ -1,0 +1,110 @@
+package umg.foka.penkeats.filters;
+
+import io.jsonwebtoken.SignatureAlgorithm;
+import io.jsonwebtoken.io.Decoders;
+import io.jsonwebtoken.security.Keys;
+import org.springframework.web.bind.annotation.RequestHeader;
+import org.springframework.web.filter.GenericFilterBean;
+
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.Jwts;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.filter.GenericFilterBean;
+import org.springframework.web.filter.OncePerRequestFilter;
+import umg.foka.penkeats.Constants;
+
+import javax.crypto.SecretKey;
+import javax.servlet.FilterChain;
+import javax.servlet.ServletException;
+import javax.servlet.ServletRequest;
+import javax.servlet.ServletResponse;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
+
+
+public class AuthFilter extends OncePerRequestFilter   {
+
+
+    /*public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain) throws IOException, ServletException {
+        HttpServletRequest httpRequest = (HttpServletRequest) servletRequest;
+        HttpServletResponse httpResponse = (HttpServletResponse) servletResponse;
+
+        String authHeader = httpRequest.getHeader("Authorization");
+        if(authHeader != null) {
+            String[] authHeaderArr = authHeader.split("Bearer ");
+            if(authHeaderArr.length > 1 && authHeaderArr[1] != null) {
+                String token = authHeaderArr[1];
+                try {
+                    SecretKey key = Keys.hmacShaKeyFor(Decoders.BASE64.decode(Constants.API_SECRET_KEY));
+                    Claims claims = Jwts.parserBuilder()
+                            .setSigningKey(key)
+                            .build()
+                            .parseClaimsJws(token).getBody();
+                    httpRequest.setAttribute("userId", Integer.parseInt(claims.get("userId").toString()));
+                    httpRequest.setAttribute("permissions", Integer.parseInt(claims.get("permissions").toString()));
+
+                }catch (Exception e) {
+                    httpResponse.sendError(HttpStatus.FORBIDDEN.value(), "invalid/expired token");
+                    return;
+                }
+            } else {
+                httpResponse.sendError(HttpStatus.FORBIDDEN.value(), "Authorization token must be Bearer [token]");
+                return;
+            }
+        } else {
+            httpResponse.sendError(HttpStatus.FORBIDDEN.value(), "Authorization token must be provided");
+            return;
+        }
+        filterChain.doFilter(servletRequest, servletResponse);
+    }*/
+    @Override
+    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
+        System.out.println("Pozyskiwanie tokena....");
+        HttpServletRequest httpRequest =  request;
+        HttpServletResponse httpResponse = response;
+
+        String authHeader = httpRequest.getHeader("X-Authorization");
+        if(authHeader != null) {
+            String[] authHeaderArr = authHeader.split("Bearer ");
+            if(authHeaderArr.length > 1 && authHeaderArr[1] != null) {
+                String token = authHeaderArr[1];
+                try {
+                    SecretKey key = Keys.hmacShaKeyFor(Decoders.BASE64.decode(Constants.API_SECRET_KEY));
+                    Claims claims = Jwts.parserBuilder()
+                            .setSigningKey(key)
+                            .build()
+                            .parseClaimsJws(token).getBody();
+                    httpRequest.setAttribute("userId", Integer.parseInt(claims.get("userid").toString()));
+                    httpRequest.setAttribute("permissions", Integer.parseInt(claims.get("permissions").toString()));
+                }catch (Exception e) {
+                    httpResponse.sendError(HttpStatus.UNAUTHORIZED.value(), "invalid/expired token");
+                    return;
+                }
+            } else {
+                httpResponse.sendError(HttpStatus.UNAUTHORIZED.value(), "Authorization token must be Bearer [token]");
+                return;
+            }
+        } else {
+            httpResponse.sendError(HttpStatus.UNAUTHORIZED.value(), "Authorization token must be provided");
+            return;
+        }
+        filterChain.doFilter(httpRequest, httpResponse);
+    }
+
+    @Override
+    protected boolean shouldNotFilter(HttpServletRequest request)
+            throws ServletException {
+        System.out.println("shouldNotFilter tokena....");
+
+        Map<String, Object> map = new HashMap<String, Object>();
+        map.put("/api/login", true);
+        map.put("/api/public/food", true);
+        map.put("/api/public/category", true);
+        map.put("/api/public/user", true);
+        String path = request.getRequestURI();
+        return map.containsKey(path);
+    }
+}

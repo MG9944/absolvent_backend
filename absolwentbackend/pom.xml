@@ -20,6 +20,26 @@
     </properties>
     <dependencies>
         <dependency>
+            <groupId>com.auth0</groupId>
+            <artifactId>java-jwt</artifactId>
+            <version>3.19.2</version>
+        </dependency>
+        <dependency>
+            <groupId>io.jsonwebtoken</groupId>
+            <artifactId>jjwt-jackson</artifactId>
+            <version>0.11.5</version>
+        </dependency>
+        <dependency>
+            <groupId>io.jsonwebtoken</groupId>
+            <artifactId>jjwt-impl</artifactId>
+            <version>0.11.5</version>
+        </dependency>
+        <dependency>
+            <groupId>io.jsonwebtoken</groupId>
+            <artifactId>jjwt-api</artifactId>
+            <version>0.11.5</version>
+        </dependency>
+        <dependency>
             <groupId>org.springframework.security</groupId>
             <artifactId>spring-security-web</artifactId>
             <version>5.5.6</version>
@@ -53,10 +73,12 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
         </dependency>
+        <!--
         <dependency>
             <groupId>com.vaadin</groupId>
             <artifactId>vaadin-spring-boot-starter</artifactId>
         </dependency>
+        -->
 
         <dependency>
             <groupId>org.postgresql</groupId>
@@ -73,7 +95,12 @@
             <artifactId>spring-boot-starter-test</artifactId>
             <scope>test</scope>
         </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-jdbc</artifactId>
+        </dependency>
     </dependencies>
+    <!--
     <dependencyManagement>
         <dependencies>
             <dependency>
@@ -85,7 +112,7 @@
             </dependency>
         </dependencies>
     </dependencyManagement>
-
+     -->
     <build>
         <plugins>
             <plugin>
@@ -107,7 +134,7 @@
         <profile>
             <id>production</id>
             <build>
-                <plugins>
+                <!--<plugins>
                     <plugin>
                         <groupId>com.vaadin</groupId>
                         <artifactId>vaadin-maven-plugin</artifactId>
@@ -127,6 +154,7 @@
                         </executions>
                     </plugin>
                 </plugins>
+                -->
             </build>
         </profile>
     </profiles>
