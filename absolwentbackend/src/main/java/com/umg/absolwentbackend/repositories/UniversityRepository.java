@@ -14,7 +14,6 @@ public class UniversityRepository implements UniversityRepoInterface {
 
     private static final String SQL_FIND_BY_NAME = "SELECT password, date_of_last_questionnaire, questionnaire_frequency, login FROM university WHERE login=?";
 
-
     @Autowired
     JdbcTemplate jdbcTemplate;
 
@@ -22,8 +21,9 @@ public class UniversityRepository implements UniversityRepoInterface {
     public University findByLoginAndPassword(String login, String password)  throws AuthenticationException
     {
         try{
+            //System.out.println(BCrypt.hashpw(password,BCrypt.gensalt(10)));
             University university = jdbcTemplate.queryForObject(SQL_FIND_BY_NAME, universityRowMapper, new Object[]{login});
-            if(/*!BCrypt.checkpw(password, university.getPassword())*/  !password.equals(university.getPassword()))
+            if(!BCrypt.checkpw(password, university.getPassword())  /*!password.equals(university.getPassword())*/)
                 throw  new AuthenticationException("Invalid name/password");
             return university;
         }
