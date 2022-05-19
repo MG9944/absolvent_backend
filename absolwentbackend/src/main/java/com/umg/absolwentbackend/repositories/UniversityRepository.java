@@ -12,7 +12,7 @@ import org.springframework.stereotype.Repository;
 @Repository
 public class UniversityRepository implements UniversityRepoInterface {
 
-    private static final String SQL_FIND_BY_NAME = "SELECT password, \"dateOfLastQuestionnaire\", \"questionnaireFrequency\", login FROM \"University\" WHERE login=?";
+    private static final String SQL_FIND_BY_NAME = "SELECT password, date_of_last_questionnaire, questionnaire_frequency, login FROM university WHERE login=?";
 
 
     @Autowired
@@ -23,7 +23,7 @@ public class UniversityRepository implements UniversityRepoInterface {
     {
         try{
             University university = jdbcTemplate.queryForObject(SQL_FIND_BY_NAME, universityRowMapper, new Object[]{login});
-            if(!BCrypt.checkpw(password, university.getPassword()))
+            if(/*!BCrypt.checkpw(password, university.getPassword())*/  !password.equals(university.getPassword()))
                 throw  new AuthenticationException("Invalid name/password");
             return university;
         }
@@ -35,8 +35,8 @@ public class UniversityRepository implements UniversityRepoInterface {
 
     private RowMapper<University> universityRowMapper = ((rs, rowNum) -> {
         return new University(rs.getString("password"),
-                rs.getDate("dateOfLastQuestionnaire"),
-                rs.getString("questionnaireFrequency"),
+                rs.getDate("date_of_last_questionnaire"),
+                rs.getString("questionnaire_frequency"),
                 rs.getString("login"));
     });
 

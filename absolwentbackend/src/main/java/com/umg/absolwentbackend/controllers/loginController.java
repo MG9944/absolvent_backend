@@ -12,6 +12,7 @@ import io.jsonwebtoken.security.Keys;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.bcrypt.BCrypt;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -32,7 +33,7 @@ public class loginController {
     @PostMapping("")
     public ResponseEntity<Map<String,Object>> login(@RequestBody Map<String, Object> userMap) {
 
-        String name = (String) userMap.get("username");
+        String name = (String) userMap.get("login");
         String password = (String) userMap.get("password");
         University uni = null;
         try{
