@@ -59,8 +59,8 @@ public class AuthFilter extends OncePerRequestFilter {
 
         Map<String, Object> map = new HashMap<String, Object>();
         map.put("/api/admin", true);
-        map.put("/api/graduate", true);
-        map.put("/api/password/reset", true);
+        map.put("/api/admin/graduate", true);
+        map.put("/api/admin/password/reset", true);
         String path = request.getRequestURI();
         return map.containsKey(path);
     }
