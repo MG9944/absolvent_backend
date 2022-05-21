@@ -1,6 +1,5 @@
 package com.umg.absolwentbackend.models;
 
-import java.sql.Date;
 
 public class University {
     private String password;
@@ -9,10 +8,8 @@ public class University {
     private String login;
 
 
-    public University(String password, Date dateOfLastQuestionnaire, String questionnaireFrequency, String login) {
+    public University(String password,String login) {
         this.password = password;
-        this.dateOfLastQuestionnaire = dateOfLastQuestionnaire;
-        this.questionnaireFrequency = questionnaireFrequency;
         this.login = login;
     }
 
@@ -20,15 +17,9 @@ public class University {
         return password;
     }
 
-    public Date getDateOfLastQuestionnaire() {
-        return dateOfLastQuestionnaire;
-    }
-
-    public String getQuestionnaireFrequency() {
-        return questionnaireFrequency;
-    }
-
     public String getLogin() {
         return login;
     }
+
+
 }
