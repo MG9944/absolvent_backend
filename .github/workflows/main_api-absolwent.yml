@@ -28,7 +28,7 @@ jobs:
         uses: actions/upload-artifact@v2
         with:
           name: absolwentbackend
-          path: 'absolwentbackend/target/*.war'
+          path: '${{ github.workspace }}/absolwentbackend/target/*.war'
 
   deploy:
     runs-on: ubuntu-latest
