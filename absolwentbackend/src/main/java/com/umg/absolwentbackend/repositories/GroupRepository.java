@@ -20,9 +20,9 @@ public class GroupRepository {
         return jdbcTemplate.queryForList(SQL_FIND_BY_GROUP_NAME);
     }
 
-    public boolean addGroup(Group group_name){
+    public boolean addGroup(Group group_name, Integer questionnaireId,Integer questionnaireFrequency){
         try{
-            jdbcTemplate.update(SQL_POST,group_name);
+            jdbcTemplate.update(SQL_POST,group_name,questionnaireId,questionnaireFrequency);
             return true;
         }catch (Exception ex){
             return false;

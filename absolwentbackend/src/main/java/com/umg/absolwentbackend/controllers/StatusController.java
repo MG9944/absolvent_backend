@@ -18,7 +18,6 @@ public class StatusController implements ErrorController {
     @RequestMapping("/api/public/status")
     public ResponseEntity<Map<String, Object>> handleError(HttpServletRequest request) {
         Object status = request.getAttribute(RequestDispatcher.ERROR_STATUS_CODE);
-        String messege = "Test";
         Map<String, Object> map = new HashMap<>();
         map.put("success", true);
 
@@ -28,23 +27,28 @@ public class StatusController implements ErrorController {
             if (statusCode == HttpStatus.BAD_REQUEST.value()) {
 
                 map.put("status", 400);
+                map.put("message", "Bad request");
                 return new ResponseEntity<>(map, HttpStatus.BAD_REQUEST);
 
             }
             if (statusCode == HttpStatus.NOT_FOUND.value()) {
                 map.put("status", 404);
+                map.put("message", "Not found");
                 return new ResponseEntity<>(map, HttpStatus.NOT_FOUND);
             }
             if (statusCode == HttpStatus.UNAUTHORIZED.value()) {
                 map.put("status", 401);
+                map.put("message", "Unauthorized");
                 return new ResponseEntity<>(map, HttpStatus.UNAUTHORIZED);
             }
             if (statusCode == HttpStatus.INTERNAL_SERVER_ERROR.value()) {
                 map.put("status", 500);
+                map.put("message", "Internal Server Error");
                 return new ResponseEntity<>(map, HttpStatus.INTERNAL_SERVER_ERROR);
             }
         }
         map.put("status", 200);
+        map.put("message", "Ok");
         return new ResponseEntity<>(map, HttpStatus.OK);
 
     }
