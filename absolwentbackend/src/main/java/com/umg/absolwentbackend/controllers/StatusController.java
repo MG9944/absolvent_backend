@@ -15,7 +15,7 @@ import java.util.Map;
 
 @RestController
 public class StatusController implements ErrorController {
-    @RequestMapping("/api/status")
+    @RequestMapping("/api/public/status")
     public ResponseEntity<Map<String, Object>> handleError(HttpServletRequest request) {
         Object status = request.getAttribute(RequestDispatcher.ERROR_STATUS_CODE);
         String messege = "Test";
