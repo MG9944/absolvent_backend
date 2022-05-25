@@ -8,5 +8,7 @@ https://absolwent.azurewebsites.net/swagger/index.html  -- SWAGGER (PROJEKT API)
 
 https://drive.google.com/drive/folders/1GPMQ6S6XfKMVqgbxFxVdqX985jWonuD6  -- DOKUMENTACJA PROJEKTU 
 
+https://api-absolwent.azurewebsites.net  -- PROD AZURE
+
 
 
