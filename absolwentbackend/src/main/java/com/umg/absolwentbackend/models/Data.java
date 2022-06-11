@@ -3,7 +3,7 @@ package com.umg.absolwentbackend.models;
 import java.sql.Date;
 
 public class Data {
-    private Date ending_date;
+    private Integer ending_date;
     private String gender;
     private String earnings;
     private String company_size;
@@ -18,7 +18,7 @@ public class Data {
     private int data_id;
     private int questionnarie_id;
 
-    public Data(Date ending_date, String gender, String earnings, String company_size, String town_size, String company_category, String job_search_time, String job_satisfaction, String period_of_employment, boolean training, boolean location, boolean proffesional_activity, int data_id, int questionnarie_id) {
+    public Data(Integer ending_date, String gender, String earnings, String company_size, String town_size, String company_category, String job_search_time, String job_satisfaction, String period_of_employment, boolean training, boolean location, boolean proffesional_activity, int data_id, int questionnarie_id) {
         this.ending_date = ending_date;
         this.gender = gender;
         this.earnings = earnings;
@@ -35,7 +35,7 @@ public class Data {
         this.questionnarie_id = questionnarie_id;
     }
 
-    public Date getEnding_date() {
+    public Integer getEnding_date() {
         return ending_date;
     }
 

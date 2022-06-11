@@ -10,7 +10,7 @@ public class Questionnaire {
     private  Date sending_date;
     private Boolean filled;
 
-    public Questionnaire(String id, Graduate graduate, Date filling_date, Date sending_date, Boolean filled) {
+    public  Questionnaire(String id, Graduate graduate, Date filling_date, Date sending_date, Boolean filled) {
         this.id = id;
         this.graduate = graduate;
         this.filling_date = filling_date;
