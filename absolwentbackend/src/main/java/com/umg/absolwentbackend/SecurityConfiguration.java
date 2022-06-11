@@ -6,6 +6,7 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
+import com.umg.absolwentbackend.filtres.AuthFilter;
 
 @EnableWebSecurity
 @Configuration

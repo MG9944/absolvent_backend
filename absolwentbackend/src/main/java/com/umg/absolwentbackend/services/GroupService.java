@@ -19,8 +19,8 @@ public class GroupService {
         return groupRepository.findByGroupName(groupName);
     }
 
-    public boolean addGroup(String group_name, Integer questionnaireFrequency, Integer questionnaireId){
-        return groupRepository.addGroup(group_name, questionnaireId,questionnaireFrequency );
+    public boolean addGroup(String group_name, Integer questionnaireFrequency){
+        return groupRepository.addGroup(group_name,questionnaireFrequency );
     }
 
     public boolean deleteGroup(String group_name){

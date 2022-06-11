@@ -10,8 +10,8 @@ import java.util.Map;
 
 @Repository
 public class GroupRepository {
-    private static final String SQL_FIND_BY_GROUP_NAME = "SELECT questionnarie_id, group_name, questionnaire_frequency, date_of_last_questionnaire FROM absolvent.groups WHERE group_name=?";
-    private static final String SQL_POST = "INSERT INTO absolvent.groups(questionnarie_id, group_name, questionnaire_frequency, date_of_last_questionnaire) VALUES (?, ?, ?, ?)";
+    private static final String SQL_FIND_BY_GROUP_NAME = "SELECT group_name, questionnaire_frequency, date_of_last_questionnaire FROM absolvent.groups WHERE group_name=?";
+    private static final String SQL_POST = "INSERT INTO absolvent.groups(group_name, questionnaire_frequency) VALUES (?, ?)";
     private static final String SQL_DELETE_BY_GROUP_NAME = "DELETE FROM absolvent.groups WHERE group_name=?";
     @Autowired
     JdbcTemplate jdbcTemplate;
@@ -20,11 +20,11 @@ public class GroupRepository {
         return jdbcTemplate.queryForList(SQL_FIND_BY_GROUP_NAME);
     }
 
-    public boolean addGroup(Group group_name, Integer questionnaireId,Integer questionnaireFrequency){
-        try{
-            jdbcTemplate.update(SQL_POST,group_name,questionnaireId,questionnaireFrequency);
+    public boolean addGroup(String group_name,Integer questionnaireFrequency) {
+        try {
+            int t = jdbcTemplate.update(SQL_POST, group_name, questionnaireFrequency);
             return true;
-        }catch (Exception ex){
+        } catch (Exception ex) {
             return false;
         }
     }

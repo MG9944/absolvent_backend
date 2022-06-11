@@ -22,21 +22,18 @@ public class GroupController {
     @Autowired
     GroupService groupService;
 
-  /*
     @PostMapping("")
     public ResponseEntity<Map<String, Object>> getAll(HttpServletRequest request, @RequestBody Map<String, Object> paramMap, @RequestParam(value = "force", required = false) String forceParam) {
-
-        int permissions = (Integer) request.getAttribute("permissions");
+        boolean permissions = (boolean) request.getAttribute("admin");
         String group_name = (String) paramMap.get("group_name");
-        Integer questionnaireId = (Integer) paramMap.get("questionnaireId");
         Integer questionnaireFrequency = (Integer) paramMap.get("questionnaireFrequency");
         if(forceParam==null)
             forceParam="false";
         Boolean force = forceParam.compareTo("true")==0 ? true : false;
-        if (permissions > 1) {
+        if (permissions) {
             List<Map<String, Object>> user;
-            var success = groupService.addGroup(group_name,questionnaireId, questionnaireFrequency);
-            if (success == 0) {
+            var success = groupService.addGroup(group_name, questionnaireFrequency);
+            if (success) {
                 Map<String, Object> map = new HashMap<>();
                 var options = new HashMap<String, String>();
                 options.put("force", "forcePost");
@@ -45,7 +42,7 @@ public class GroupController {
                 map.put("options", options);
                 return new ResponseEntity<>(map, HttpStatus.OK);
             }
-            if (success == -1) {
+            if (!success) {
                 Map<String, Object> map = new HashMap<>();
                 map.put("success", false);
                 map.put("message", "Error");
@@ -63,6 +60,5 @@ public class GroupController {
 
 
     }
-    */
 
 }

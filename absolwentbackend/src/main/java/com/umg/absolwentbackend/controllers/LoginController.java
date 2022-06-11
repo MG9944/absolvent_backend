@@ -55,7 +55,7 @@ public class LoginController {
         SecretKey key = Keys.hmacShaKeyFor(Decoders.BASE64.decode(Constants.API_SECRET_KEY));
         String token = Jwts.builder().signWith(key)
                 .setIssuedAt(new Date(timestamp))
-                .setExpiration(new Date(timestamp + Constants.TOKEN_VALIDITY))
+                .setExpiration(new Date(timestamp /*+ Constants.TOKEN_VALIDITY*/))
                 .claim("login", university.getLogin())
                 .claim("admin",true)
                 .compact();

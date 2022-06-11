@@ -19,4 +19,3 @@ public class University {
         return login;
     }
 }
-    

@@ -5,6 +5,7 @@ import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.filter.OncePerRequestFilter;
 
@@ -18,6 +19,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class AuthFilter extends OncePerRequestFilter {
+
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         System.out.println("Pozyskiwanie tokena....");
@@ -25,7 +27,8 @@ public class AuthFilter extends OncePerRequestFilter {
         HttpServletResponse httpResponse = response;
 
         String authHeader = httpRequest.getHeader("X-Authorization");
-        if(authHeader != null) {
+        if(authHeader != null)
+        {
             String[] authHeaderArr = authHeader.split("Bearer ");
             if(authHeaderArr.length > 1 && authHeaderArr[1] != null) {
                 String token = authHeaderArr[1];
@@ -38,6 +41,7 @@ public class AuthFilter extends OncePerRequestFilter {
                     httpRequest.setAttribute("login",claims.get("login"));
                     httpRequest.setAttribute("admin", Boolean.parseBoolean(claims.get("admin").toString()));
                 }catch (Exception e) {
+                    System.out.println("expired");
                     httpResponse.sendError(HttpStatus.UNAUTHORIZED.value(), "invalid/expired token");
                     return;
                 }
@@ -45,7 +49,10 @@ public class AuthFilter extends OncePerRequestFilter {
                 httpResponse.sendError(HttpStatus.UNAUTHORIZED.value(), "Authorization token must be Bearer [token]");
                 return;
             }
-        } else {
+        }
+        else
+        {
+            System.out.println("TEST");
             httpResponse.sendError(HttpStatus.UNAUTHORIZED.value(), "Authorization token must be provided");
             return;
         }
@@ -56,11 +63,9 @@ public class AuthFilter extends OncePerRequestFilter {
     protected boolean shouldNotFilter(HttpServletRequest request)
             throws ServletException {
         System.out.println("shouldNotFilter token....");
-
         Map<String, Object> map = new HashMap<String, Object>();
-        map.put("/api/admin", true);
-        map.put("/api/admin/graduate", true);
         map.put("/api/admin/password/reset", true);
+        map.put("/api/auth/admin", true);
         String path = request.getRequestURI();
         return map.containsKey(path);
     }
