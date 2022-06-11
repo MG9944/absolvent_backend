@@ -13,6 +13,7 @@ import org.springframework.stereotype.Repository;
 public class UniversityRepository implements UniversityRepoInterface {
 
     private static final String SQL_FIND_BY_NAME = "SELECT password,login FROM university WHERE login=?";
+    private static final String SQL_UPDATE_PASSWORD = "UPDATE university SET password = ? WHERE login=?";
 
     @Autowired
     JdbcTemplate jdbcTemplate;
@@ -30,6 +31,17 @@ public class UniversityRepository implements UniversityRepoInterface {
         catch (EmptyResultDataAccessException e)
         {
             throw  new AuthenticationException("Invalid name/password");
+        }
+    }
+
+    public void updatePassword(String hashePass)
+    {
+        try{
+            jdbcTemplate.update(SQL_UPDATE_PASSWORD, hashePass,"UMG2022");
+        }
+        catch ( Exception e)
+        {
+            System.out.println(e);
         }
     }
 
