@@ -55,6 +55,14 @@ public class DataController {
         }
     }
 
+    private Map<String, Object> dataModeling(){
+        Map<String, Object> map = new HashMap<>();
+
+
+
+        return map; //To jest porażka
+    }
+
 
 
 }
