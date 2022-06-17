@@ -4,7 +4,8 @@ package com.umg.absolwentbackend.controllers;
 import org.springframework.boot.web.servlet.error.ErrorController;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -14,8 +15,9 @@ import java.util.HashMap;
 import java.util.Map;
 
 @RestController
-public class StatusController implements ErrorController {
-    @RequestMapping("/api/public/status")
+@RequestMapping("/api/public")
+public class PublicController implements ErrorController {
+    @GetMapping("/status")
     public ResponseEntity<Map<String, Object>> handleError(HttpServletRequest request) {
         Object status = request.getAttribute(RequestDispatcher.ERROR_STATUS_CODE);
         Map<String, Object> map = new HashMap<>();
@@ -50,6 +52,6 @@ public class StatusController implements ErrorController {
         map.put("status", 200);
         map.put("message", "Ok");
         return new ResponseEntity<>(map, HttpStatus.OK);
-
     }
+
 }

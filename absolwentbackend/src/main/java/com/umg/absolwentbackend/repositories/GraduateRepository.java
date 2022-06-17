@@ -5,10 +5,12 @@ import com.umg.absolwentbackend.exceptions.AuthenticationException;
 import com.umg.absolwentbackend.models.Graduate;
 import com.umg.absolwentbackend.models.University;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
+import org.springframework.security.crypto.bcrypt.BCrypt;
 import org.springframework.stereotype.Repository;
 
 import java.sql.*;
@@ -52,7 +54,7 @@ public class GraduateRepository {
         return graduate;
     }
 
-    public Integer countbyemail(String email) {
+    public Integer countbyemail(String email) {//ZW
         Integer number = jdbcTemplate.queryForObject(SQL_COUNT_BY_EMAIL, Integer.class, new Object[]{email});
         return number;
     }

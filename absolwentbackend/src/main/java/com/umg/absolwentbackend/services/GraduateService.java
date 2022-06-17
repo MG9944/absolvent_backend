@@ -8,6 +8,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.sql.Date;
+import java.util.List;
+import java.util.Map;
 
 @Service
 @Transactional
@@ -23,5 +25,9 @@ public class GraduateService {
         }
         Integer userid = graduateRepository.insertGraduate(name,lastName,email,graduation_year,faculty,field,date_of_birth,title);
         return graduateRepository.findbyid(userid);
+    }
+
+    public List<Map<String, Object>> validateGroup(String groupName){
+        return graduateRepository.findGroupEmails(groupName);
     }
 }

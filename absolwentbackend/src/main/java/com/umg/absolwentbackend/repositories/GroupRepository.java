@@ -17,7 +17,7 @@ public class GroupRepository {
     JdbcTemplate jdbcTemplate;
 
     public List<Map<String, Object>> findByGroupName(String groupName){
-        return jdbcTemplate.queryForList(SQL_FIND_BY_GROUP_NAME);
+        return jdbcTemplate.queryForList(SQL_FIND_BY_GROUP_NAME, groupName);
     }
 
     public boolean addGroup(String group_name,Integer questionnaireFrequency) {
