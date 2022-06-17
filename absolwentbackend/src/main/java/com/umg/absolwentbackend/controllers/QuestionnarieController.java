@@ -4,9 +4,11 @@ package com.umg.absolwentbackend.controllers;
 import com.umg.absolwentbackend.Constants;
 import com.umg.absolwentbackend.models.Graduate;
 import com.umg.absolwentbackend.models.Group;
+import com.umg.absolwentbackend.models.University;
 import com.umg.absolwentbackend.repositories.GraduateRepository;
 import com.umg.absolwentbackend.services.EmailService;
 import com.umg.absolwentbackend.services.GraduateService;
+import com.umg.absolwentbackend.services.GroupService;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
@@ -35,21 +37,21 @@ public class QuestionnarieController {
     private GraduateRepository graduateRepository;
 
     @Autowired
-    private GraduateService graduateService;
+    private GroupService groupService;
 
     //To powino się wykonywać aoutomatycznie, ale narazie jest na żądanie
     @PostMapping("/sendsurvey")
     public ResponseEntity<Map<String,Object>> sendMail(@RequestBody Map<String, Object> graduateMap) {
         String groupName=(String)graduateMap.get("groupName");
         List<Map<String, Object>> graduateEmails = graduateRepository.findGroupEmails(groupName);
-        List<Map<String, Object>> group = null;
+        Group group = null;
         try{
-            group = graduateService.validateGroup(groupName);
+            group = groupService.validateGroup(groupName);
         }catch (Exception e){
             Map<String,Object> map = new HashMap<>();
             map.put("success", false);
             map.put("message", e.getMessage());
-            return  new ResponseEntity<>(map, HttpStatus.UNAUTHORIZED);
+            return  new ResponseEntity<>(map, HttpStatus.BAD_REQUEST);
         }
         String token = generateSurveyToken(group);
         String title = "Ankieta dla UMG";

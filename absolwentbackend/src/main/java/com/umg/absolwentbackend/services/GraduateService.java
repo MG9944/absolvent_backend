@@ -27,7 +27,4 @@ public class GraduateService {
         return graduateRepository.findbyid(userid);
     }
 
-    public List<Map<String, Object>> validateGroup(String groupName){
-        return graduateRepository.findGroupEmails(groupName);
-    }
 }
