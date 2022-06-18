@@ -29,10 +29,7 @@ public class GraduateRepository {
     private static final String SQL_FIND_BY_ID = "SELECT * FROM graduate WHERE graduate_id=?";
 
     private static final String SQL_FIND_BY_EMAIL = "SELECT email FROM graduate WHERE email=?";
-    private static final String SQL_GET_EMAILS = "SELECT email FROM absolvent.graduate Inner join absolvent.questionnaire on graduate.graduate_id=questionnaire.graduate_id WHERE questionnaire.group_name=?";
-    //Przenieść do innego controllera???
-    //Właśnie nie wiem
-    private static final String SQL_NEXT_SENDING_DATE ="SELECT questionnaire_frequency,questionnaire_frequency FROM absolvent.graduate Inner join absolvent.questionnaire on graduate.graduate_id=questionnaire.graduate_id inner join absolvent.groups on questionnaire.group_name=absolvent.groups.group_name WHERE absolvent.groups.group_name=?";
+    private static final String SQL_GET_EMAILS = "SELECT email FROM absolvent.graduate where group_name=?";
 
 
     public Integer insertGraduate(String name, String lastName, String email, int graduation_year, String faculty, String field, Date date_of_birth,String title) throws AuthenticationException

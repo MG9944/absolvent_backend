@@ -2,12 +2,10 @@ package com.umg.absolwentbackend.repositories;
 
 import com.umg.absolwentbackend.exceptions.AuthenticationException;
 import com.umg.absolwentbackend.models.Group;
-import com.umg.absolwentbackend.models.University;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
-import org.springframework.security.crypto.bcrypt.BCrypt;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
