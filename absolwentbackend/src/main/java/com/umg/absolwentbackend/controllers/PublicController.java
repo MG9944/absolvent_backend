@@ -54,4 +54,13 @@ public class PublicController implements ErrorController {
         return new ResponseEntity<>(map, HttpStatus.OK);
     }
 
+    @GetMapping("/statistics")
+    private Map<String, Object> dataModeling(){
+        Map<String, Object> map = new HashMap<>();
+
+
+
+        return map; //To jest porażka
+    }
+
 }

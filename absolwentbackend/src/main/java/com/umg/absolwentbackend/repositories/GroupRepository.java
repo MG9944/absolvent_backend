@@ -60,6 +60,6 @@ public class GroupRepository {
     }
 
     private final RowMapper<Group> groupNameRowMapper = ((rs, rowNum) -> {
-        return new Group(rs.getString("groupName"));
+        return new Group(rs.getString("group_name"));
     });
 }

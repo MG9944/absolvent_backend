@@ -22,7 +22,6 @@ public class DataRepository {
     private static final String SQL_SELECT_JOB_SEARCH_TIME_BY_YEAR_AND_GENDER = "SELECT job_search_time FROM absolvent.data WHERE gender = ? AND ending_date = ?";
     private static final String SQL_SELECT_COMPANY_CATEGORY_BY_YEAR_AND_GENDER = "SELECT company_category FROM absolvent.data WHERE gender = ? AND ending_date = ?";
 
-
     public boolean sendData(Integer endingDate, String gender, String earning, String companySize, String townSize, String companyCategory, String jobSearchTime, String periodOfEmployment, Integer questionnarieId, boolean location, boolean proffesionalActivity, boolean jobSatisfaction, boolean training ) {
         try{
             int t = jdbcTemplate.update(SQL_ADD, endingDate, gender, earning, companySize, townSize, companyCategory, jobSearchTime, periodOfEmployment, questionnarieId, location, proffesionalActivity, jobSatisfaction,training);

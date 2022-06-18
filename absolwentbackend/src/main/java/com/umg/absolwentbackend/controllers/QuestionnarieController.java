@@ -42,7 +42,7 @@ public class QuestionnarieController {
     //To powino się wykonywać aoutomatycznie, ale narazie jest na żądanie
     @PostMapping("/sendsurvey")
     public ResponseEntity<Map<String,Object>> sendMail(@RequestBody Map<String, Object> graduateMap) {
-        String groupName=(String)graduateMap.get("groupName");
+        String groupName=(String)graduateMap.get("group_name");
         List<Map<String, Object>> graduateEmails = graduateRepository.findGroupEmails(groupName);
         Group group = null;
         try{
@@ -83,7 +83,7 @@ public class QuestionnarieController {
         String token = Jwts.builder().signWith(key)
                 .setIssuedAt(new Date(timestamp))
                 .setExpiration(new Date(timestamp + Constants.TOKEN_VALIDITY))
-                .claim("groupName", group.getGroupName())
+                .claim("group_name", group.getGroupName())
                 .compact();
         return token;
     }
