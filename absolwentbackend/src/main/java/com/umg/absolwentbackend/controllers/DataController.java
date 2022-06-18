@@ -1,61 +1,68 @@
 package com.umg.absolwentbackend.controllers;
-
-
-import com.umg.absolwentbackend.models.Graduate;
+import com.umg.absolwentbackend.models.Data;
 import com.umg.absolwentbackend.services.DataService;
-import com.umg.absolwentbackend.services.UniveristyService;
-import org.apache.tomcat.jni.Local;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-
-import java.time.LocalDate;
-import java.util.HashMap;
-import java.util.Map;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/api/survey")
-public class DataController {
-
+@RequestMapping("/s_api/data")
+public class DataController
+{
     @Autowired
     DataService dataService;
 
-    @PostMapping("")
-    public ResponseEntity<Map<String,Object>> sendSurvey(@RequestBody Map<String, Object> userMap) {
-
-        Integer endingDate = (Integer) userMap.get("endingDate");
-        String gender = (String) userMap.get("gender");
-        String earning = (String) userMap.get("earning");
-        String companySize = (String) userMap.get("companySize");
-        String townSize = (String) userMap.get("townSize");
-        String companyCategory = (String) userMap.get("companyCategory");
-        String jobSearchTime = (String) userMap.get("jobSearchTime");
-        String periodOfEmployment = (String) userMap.get("periodOfEmployment");
-        Integer questionnarieId = (Integer) userMap.get("questionnarieId");
-        boolean location = (boolean) userMap.get("location");
-        boolean proffesionalActivity = (boolean) userMap.get("proffesionalActivity");
-        boolean training = (boolean) userMap.get("training");
-        boolean jobSatisfaction = (boolean) userMap.get("jobSatisfaction");
-        boolean added = dataService.sendData(endingDate, gender, earning, companySize, townSize, companyCategory, jobSearchTime, periodOfEmployment, questionnarieId, location, proffesionalActivity, training, jobSatisfaction);
-
-        if (added) {
-            Map<String, Object> map = new HashMap<>();
-            map.put("success", true);
-            return new ResponseEntity<>(map, HttpStatus.ACCEPTED);
-        }
-        else
-        {
-            Map<String, Object> map = new HashMap<>();
-            map.put("success", false);
-            return new ResponseEntity<>(map, HttpStatus.FORBIDDEN);
-        }
+    @GetMapping("/")
+    public ResponseEntity<Iterable<Data>> findAll()
+    {
+        return new ResponseEntity<>(dataService.findAll(), HttpStatus.OK);
     }
 
+    @PostMapping("/")
+    public boolean sendData(@RequestBody Data data)
+    {
+        return dataService.sendData(data.getEnding_date(), data.getGender(), data.getEarnings(), data.getCompany_size(), data.getTown_size(), data.getCompany_category(), data.getJob_search_time(), data.getPeriod_of_employment(), data.getQuestionnarie_id(), data.isLocation(), data.isProffesional_activity(), data.isLocation(), data.isTraining());
+    }
 
+    @GetMapping("/test")
+    public String testConnection()
+    {
+        return "Data controller is working !";
+    }
 
+    @GetMapping("/allByGenderAndYear")
+    public ResponseEntity<Iterable<Data>> getAllByGenderAndYear(@RequestParam("gender") String gender, @RequestParam("year") Integer year)
+    {
+        System.out.println("Get data-----]\nGender: "+gender+"\nYear: "+year+"\nGet data-----]");
+        return new ResponseEntity<>(dataService.getAllByGenderAndYear(gender, year), HttpStatus.OK);
+    }
 
+    @GetMapping("/periodOfEmployementByGenderAndYear")
+    public ResponseEntity<Iterable<String>> getPeriodOfEmployementByGenderAndYear (@RequestParam("gender") String gender, @RequestParam("year") Integer year)
+    {
+        System.out.println("Get data-----]\nGender: "+gender+"\nYear: "+year+"\nGet data-----]");
+        return new ResponseEntity<>(dataService.getPeriodOfEmployementByGenderAndYear(gender, year), HttpStatus.OK);
+    }
+
+    @GetMapping("/companyCategoryByGenderAndYear")
+    public ResponseEntity<Iterable<String>> getCompanyCategoryByGenderAndYear (@RequestParam("gender") String gender, @RequestParam("year") Integer year)
+    {
+        System.out.println("Get data-----]\nGender: "+gender+"\nYear: "+year+"\nGet data-----]");
+        return new ResponseEntity<>(dataService.getCompanyCategoryByGenderAndYear(gender, year), HttpStatus.OK);
+    }
+
+    @GetMapping("/companySizeByGenderAndYear")
+    public ResponseEntity<Iterable<String>> getCompanySizeByGenderAndYear (@RequestParam("gender") String gender, @RequestParam("year") Integer year)
+    {
+        System.out.println("Get data-----]\nGender: "+gender+"\nYear: "+year+"\nGet data-----]");
+        return new ResponseEntity<>(dataService.getCompanySizeByGenderAndYear(gender, year), HttpStatus.OK);
+    }
+
+    @GetMapping("/jobSearchTimeByGenderAndYear")
+    public ResponseEntity<Iterable<String>> getSearchTimeByGenderAndYear (@RequestParam("gender") String gender, @RequestParam("year") Integer year)
+    {
+        System.out.println("Get data-----]\nGender: "+gender+"\nYear: "+year+"\nGet data-----]");
+        return new ResponseEntity<>(dataService.getJobSearchTimeByGenderAndYear(gender, year), HttpStatus.OK);
+    }
 }

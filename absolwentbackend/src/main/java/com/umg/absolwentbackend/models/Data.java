@@ -1,8 +1,10 @@
 package com.umg.absolwentbackend.models;
 
+import java.io.Serializable;
 import java.sql.Date;
 
-public class Data {
+public class Data implements Serializable
+{
     private Integer ending_date;
     private String gender;
     private String earnings;
@@ -89,5 +91,25 @@ public class Data {
 
     public int getQuestionnarie_id() {
         return questionnarie_id;
+    }
+
+    @Override
+    public String toString() {
+        return "Data{" +
+                "ending_date=" + ending_date +
+                ", gender='" + gender + '\'' +
+                ", earnings='" + earnings + '\'' +
+                ", company_size='" + company_size + '\'' +
+                ", town_size='" + town_size + '\'' +
+                ", company_category='" + company_category + '\'' +
+                ", job_search_time='" + job_search_time + '\'' +
+                ", job_satisfaction='" + job_satisfaction + '\'' +
+                ", period_of_employment='" + period_of_employment + '\'' +
+                ", training=" + training +
+                ", location=" + location +
+                ", proffesional_activity=" + proffesional_activity +
+                ", data_id=" + data_id +
+                ", questionnarie_id=" + questionnarie_id +
+                '}';
     }
 }
