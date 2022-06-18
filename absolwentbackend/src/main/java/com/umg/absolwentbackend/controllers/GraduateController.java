@@ -35,9 +35,10 @@ public class GraduateController {
          String field = (String) graduateMap.get("field");
          String title = (String) graduateMap.get("title");
          String faculty = (String) graduateMap.get("faculty");
+         String group = (String) graduateMap.get("group");
          Graduate graduate = null;
          try{
-             graduate = graduateService.addGraduate(name,lastname,email,graduation_year,faculty,field,date_of_birth,title);
+             graduate = graduateService.addGraduate(name,lastname,email,graduation_year,faculty,field,date_of_birth,title,group);
          } catch (AuthenticationException e) {
              Map<String, Object> map = new HashMap<>();
              map.put("success", false);

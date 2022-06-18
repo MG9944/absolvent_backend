@@ -18,12 +18,12 @@ public class GraduateService {
     @Autowired
     GraduateRepository graduateRepository;
 
-    public Graduate addGraduate(String name, String lastName, String email, int graduation_year, String faculty, String field, Date date_of_birth, String title) throws AuthenticationException {
+    public Graduate addGraduate(String name, String lastName, String email, int graduation_year, String faculty, String field, Date date_of_birth, String title,String group) throws AuthenticationException {
         Integer count = graduateRepository.countbyemail(email);
         if(count>0) {
             throw new AuthenticationException("Graduate already exists");
         }
-        Integer userid = graduateRepository.insertGraduate(name,lastName,email,graduation_year,faculty,field,date_of_birth,title);
+        Integer userid = graduateRepository.insertGraduate(name,lastName,email,graduation_year,faculty,field,date_of_birth,title,group);
         return graduateRepository.findbyid(userid);
     }
 

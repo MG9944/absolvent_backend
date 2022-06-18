@@ -13,6 +13,7 @@ public class Graduate {
     private String field;
     private String title;
     private String faculty;
+    private String group;
 
     public Integer getGraduate_id() {
         return graduate_id;
@@ -50,7 +51,11 @@ public class Graduate {
         return faculty;
     }
 
-    public Graduate(Integer graduate_id, String name, String lastname, Date date_of_birth, String email, int graduation_year, String field, String title, String faculty) {
+    public String getGroup() {
+        return group;
+    }
+
+    public Graduate(Integer graduate_id, String name, String lastname, Date date_of_birth, String email, int graduation_year, String field, String title, String faculty, String group) {
         this.graduate_id = graduate_id;
         this.name = name;
         this.lastname = lastname;
@@ -60,5 +65,6 @@ public class Graduate {
         this.field = field;
         this.title = title;
         this.faculty = faculty;
+        this.group = group;
     }
 }
