@@ -70,17 +70,8 @@ public class GraduateRepository {
         return jdbcTemplate.queryForList(SQL_GET_EMAILS,group_name);
     }
 
-    public LocalDateTime findNextSendingDate(String group_name) {
-        //To sie pewnie da zrobić inaczej,bez RowMappera XD
-        LocalDateTime data = jdbcTemplate.queryForObject(SQL_NEXT_SENDING_DATE,nextDateRowMapper,new Object[]{group_name});
-        return data;
-    }
 
-    private RowMapper<LocalDateTime> nextDateRowMapper = ((rs, rowNum) -> {
-        int freq = rs.getInt("date_of_last_questionnaire");
-        Date lastDate = rs.getDate("date_of_last_questionnaire");
-        return LocalDateTime.from(lastDate.toInstant()).plusDays(freq);
-    });
+
 
     private RowMapper<Graduate> graduateRowMapper = ((rs, rowNum) -> {
         return new Graduate(rs.getInt("graduate_id"),
