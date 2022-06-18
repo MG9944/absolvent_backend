@@ -24,21 +24,15 @@ public class GraduateRepository {
     @Autowired
     JdbcTemplate jdbcTemplate;
 
-    private static final String SQL_ADD  = "INSERT INTO graduate(date_of_birth,email,name,lastname,graduation_year, faculty, field,tittle,group_name) VALUES (?,?,?,?,?,?,?,?,?)";
+    private static final String SQL_ADD  = "INSERT INTO graduate(date_of_birth,email,name,lastname,graduation_year, faculty, field,tittle,group_name,gender) VALUES (?,?,?,?,?,?,?,?,?,?)";
     private static final String SQL_COUNT_BY_EMAIL = "SELECT count(*) FROM graduate WHERE email=?;";
     private static final String SQL_FIND_BY_ID = "SELECT * FROM graduate WHERE graduate_id=?";
-
     private static final String SQL_FIND_BY_EMAIL = "SELECT email FROM graduate WHERE email=?";
-    private static final String SQL_GET_EMAILS = "SELECT email FROM absolvent.graduate where group_name=?";
-<<<<<<< HEAD
-    //Przenieść do innego controllera???
-    //Właśnie nie wiem
-    private static final String SQL_NEXT_SENDING_DATE ="SELECT questionnaire_frequency,questionnaire_frequency FROM absolvent.graduate Inner join absolvent.questionnaire on graduate.graduate_id=questionnaire.graduate_id inner join absolvent.groups on questionnaire.group_name=absolvent.groups.group_name WHERE absolvent.groups.group_name=?";
-=======
->>>>>>> 829e110bd494808039531dc261acc56065fb24ab
+    private static final String SQL_GET_EMAILS = "SELECT email,graduation_year,field,faculty,title  FROM absolvent.graduate where group_name=?";
 
 
-    public Integer insertGraduate(String name, String lastName, String email, int graduation_year, String faculty, String field, Date date_of_birth,String title,String group) throws AuthenticationException
+
+    public Integer insertGraduate(String name, String lastName, String email, int graduation_year, String faculty, String field, Date date_of_birth,String title,String group,String gender) throws AuthenticationException
     {
         try {
             KeyHolder keyHolder = new GeneratedKeyHolder();
@@ -53,6 +47,7 @@ public class GraduateRepository {
                 ps.setString(7,field);
                 ps.setString(8,title);
                 ps.setString(9,group);
+                ps.setString(10,gender);
                 return ps;
             },keyHolder);
             return (Integer) keyHolder.getKeys().get("graduate_id");
@@ -84,6 +79,7 @@ public class GraduateRepository {
         return new Graduate(rs.getInt("graduate_id"),
                 rs.getString("name"),
                 rs.getString("lastname"),
+                rs.getString("gender"),
                 rs.getDate("date_of_birth"),
                 rs.getString("email"),
                 rs.getInt("graduation_year"),

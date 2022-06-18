@@ -14,6 +14,7 @@ public class Graduate {
     private String title;
     private String faculty;
     private String group;
+    private String gender;
 
     public Integer getGraduate_id() {
         return graduate_id;
@@ -55,10 +56,11 @@ public class Graduate {
         return group;
     }
 
-    public Graduate(Integer graduate_id, String name, String lastname, Date date_of_birth, String email, int graduation_year, String field, String title, String faculty, String group) {
+    public Graduate(Integer graduate_id, String name, String lastname,String gender, Date date_of_birth, String email, int graduation_year, String field, String title, String faculty, String group) {
         this.graduate_id = graduate_id;
         this.name = name;
         this.lastname = lastname;
+        this.gender=gender;
         this.date_of_birth = date_of_birth;
         this.email = email;
         this.graduation_year = graduation_year;

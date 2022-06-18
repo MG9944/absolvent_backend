@@ -49,16 +49,25 @@ public class QuestionnarieController {
             map.put("message", e.getMessage());
             return  new ResponseEntity<>(map, HttpStatus.BAD_REQUEST);
         }
-        String token = generateSurveyToken(group);
 
+        String bodyTemplate = "Link do ankiety ";
         String title = "Ankieta dla UMG";
-        String body = "Link do ankiety";//Tu powinien być link z tokenem do ankiety
 
+        if(groupName.isEmpty()) {
+            Map<String, Object> map = new HashMap<>();
+            map.put("success", false);
+            map.put("status", 500);
+            return new ResponseEntity<>(map, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
         //Wysyłanie emaila
         for (Map<String, Object> emailMap : graduateEmails){
+            String token = generateSurveyToken(emailMap.get("email").toString(),emailMap.get("field").toString(),emailMap.get("faculty").toString(),emailMap.get("title").toString(), (Integer) emailMap.get("graduation_year"));
+
+            String body = bodyTemplate;
             try {
                 System.out.println(emailMap.get("email").toString());
-                emailSender.sendEmail(emailMap.get("email").toString()/* Sprawdzić czy to działa */, title, body);
+                body += "/*Tu link z tokenem*/";
+                emailSender.sendEmail(emailMap.get("email").toString(), title, body);
 
             } catch (Exception e) {
                 Map<String, Object> map = new HashMap<>();
@@ -73,13 +82,17 @@ public class QuestionnarieController {
         return new ResponseEntity<>(map, HttpStatus.OK);
     }
 
-    private String generateSurveyToken(Group group){
+    private String generateSurveyToken(String email,String field,String faculty,String title,Integer graduation_year){
         long timestamp = System.currentTimeMillis();
         SecretKey key = Keys.hmacShaKeyFor(Decoders.BASE64.decode(Constants.API_SECRET_KEY));
         String token = Jwts.builder().signWith(key)
                 .setIssuedAt(new Date(timestamp))
                 .setExpiration(new Date(timestamp + Constants.TOKEN_VALIDITY))
-                .claim("group_name", group.getGroupName())
+                .claim("email", email)
+                .claim("field", field)
+                .claim("faculty", faculty)
+                .claim("title", title)
+                .claim("graduation_year", graduation_year)
                 .compact();
         return token;
     }
