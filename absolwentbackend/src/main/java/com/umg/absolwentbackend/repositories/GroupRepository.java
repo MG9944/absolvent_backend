@@ -38,7 +38,8 @@ public class GroupRepository {
         }
         catch (EmptyResultDataAccessException e)
         {
-            throw  new AuthenticationException("Invalid group name");
+            System.out.println(e);
+            throw  new AuthenticationException("Invalid group name2");
         }
     }
 
@@ -60,6 +61,6 @@ public class GroupRepository {
     }
 
     private final RowMapper<Group> groupNameRowMapper = ((rs, rowNum) -> {
-        return new Group(rs.getString("groupName"));
+        return new Group(rs.getString("group_name"));
     });
 }
