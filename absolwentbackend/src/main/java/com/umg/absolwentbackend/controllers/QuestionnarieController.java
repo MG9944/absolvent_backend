@@ -73,7 +73,7 @@ public class QuestionnarieController {
 
         Map<String, Object> map = new HashMap<>();
         map.put("success", false);
-        map.put("status", 500);
+        map.put("error", "No emails in list");
         return new ResponseEntity<>(map, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
@@ -83,7 +83,7 @@ public class QuestionnarieController {
         String token = Jwts.builder().signWith(key)
                 .setIssuedAt(new Date(timestamp))
                 .setExpiration(new Date(timestamp + Constants.TOKEN_VALIDITY))
-                .claim("groupName", group.getGroupName())
+                .claim("group_name", group.getGroupName())
                 .compact();
         return token;
     }

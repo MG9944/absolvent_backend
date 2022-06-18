@@ -2,7 +2,7 @@ package com.umg.absolwentbackend.models;
 
 public class Group {
     private Integer questionnaireFrequency;
-    private static String groupName;
+    private  String groupName;
     private Integer questionnaireId;
 
     private Data dataOfLastQuestionnaire;
@@ -12,7 +12,7 @@ public class Group {
         this.groupName = groupName;
     }
 
-    public static String getGroupName(){
+    public  String getGroupName(){
         return groupName;
     }
 
