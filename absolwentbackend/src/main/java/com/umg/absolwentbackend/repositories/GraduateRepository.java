@@ -30,9 +30,12 @@ public class GraduateRepository {
 
     private static final String SQL_FIND_BY_EMAIL = "SELECT email FROM graduate WHERE email=?";
     private static final String SQL_GET_EMAILS = "SELECT email FROM absolvent.graduate where group_name=?";
+<<<<<<< HEAD
     //Przenieść do innego controllera???
     //Właśnie nie wiem
     private static final String SQL_NEXT_SENDING_DATE ="SELECT questionnaire_frequency,questionnaire_frequency FROM absolvent.graduate Inner join absolvent.questionnaire on graduate.graduate_id=questionnaire.graduate_id inner join absolvent.groups on questionnaire.group_name=absolvent.groups.group_name WHERE absolvent.groups.group_name=?";
+=======
+>>>>>>> 829e110bd494808039531dc261acc56065fb24ab
 
 
     public Integer insertGraduate(String name, String lastName, String email, int graduation_year, String faculty, String field, Date date_of_birth,String title,String group) throws AuthenticationException
@@ -74,17 +77,8 @@ public class GraduateRepository {
         return jdbcTemplate.queryForList(SQL_GET_EMAILS,group_name);
     }
 
-    public LocalDateTime findNextSendingDate(String group_name) {
-        //To sie pewnie da zrobić inaczej,bez RowMappera XD
-        LocalDateTime data = jdbcTemplate.queryForObject(SQL_NEXT_SENDING_DATE,nextDateRowMapper,new Object[]{group_name});
-        return data;
-    }
 
-    private RowMapper<LocalDateTime> nextDateRowMapper = ((rs, rowNum) -> {
-        int freq = rs.getInt("date_of_last_questionnaire");
-        Date lastDate = rs.getDate("date_of_last_questionnaire");
-        return LocalDateTime.from(lastDate.toInstant()).plusDays(freq);
-    });
+
 
     private RowMapper<Graduate> graduateRowMapper = ((rs, rowNum) -> {
         return new Graduate(rs.getInt("graduate_id"),

@@ -2,12 +2,9 @@ package com.umg.absolwentbackend.controllers;
 
 
 import com.umg.absolwentbackend.Constants;
-import com.umg.absolwentbackend.models.Graduate;
 import com.umg.absolwentbackend.models.Group;
-import com.umg.absolwentbackend.models.University;
 import com.umg.absolwentbackend.repositories.GraduateRepository;
 import com.umg.absolwentbackend.services.EmailService;
-import com.umg.absolwentbackend.services.GraduateService;
 import com.umg.absolwentbackend.services.GroupService;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.io.Decoders;
@@ -70,11 +67,10 @@ public class QuestionnarieController {
                 return new ResponseEntity<>(map, HttpStatus.INTERNAL_SERVER_ERROR);
             }
         }
-
         Map<String, Object> map = new HashMap<>();
-        map.put("success", false);
-        map.put("error", "No emails in list");
-        return new ResponseEntity<>(map, HttpStatus.INTERNAL_SERVER_ERROR);
+        map.put("success", true);
+        map.put("status", 200);
+        return new ResponseEntity<>(map, HttpStatus.OK);
     }
 
     private String generateSurveyToken(Group group){
