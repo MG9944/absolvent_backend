@@ -35,7 +35,6 @@ public class QuestionnarieController {
     private EmailService emailSender;
     @Autowired
     private GraduateRepository graduateRepository;
-
     @Autowired
     private GroupService groupService;
 
@@ -54,6 +53,7 @@ public class QuestionnarieController {
             return  new ResponseEntity<>(map, HttpStatus.BAD_REQUEST);
         }
         String token = generateSurveyToken(group);
+
         String title = "Ankieta dla UMG";
         String body = "Link do ankiety";//Tu powinien być link z tokenem do ankiety
 
@@ -73,7 +73,7 @@ public class QuestionnarieController {
 
         Map<String, Object> map = new HashMap<>();
         map.put("success", false);
-        map.put("status", 500);
+        map.put("error", "No emails in list");
         return new ResponseEntity<>(map, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 

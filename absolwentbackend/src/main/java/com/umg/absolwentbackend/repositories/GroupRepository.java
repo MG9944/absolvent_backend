@@ -31,14 +31,15 @@ public class GroupRepository {
     public Group findByName(String groupName)  throws AuthenticationException
     {
         try{
-            Group group = jdbcTemplate.queryForObject(SQL_FIND_NAME, groupNameRowMapper, new Object[]{groupName});
+            Group group = jdbcTemplate.queryForObject(SQL_FIND_NAME, groupNameRowMapper,new Object[]{groupName});
             if(!groupName.equals(group.getGroupName()))
                 throw  new AuthenticationException("Invalid group name");
             return group;
         }
         catch (EmptyResultDataAccessException e)
         {
-            throw  new AuthenticationException("Invalid group name");
+            System.out.println(e);
+            throw  new AuthenticationException("Invalid group name2");
         }
     }
 
