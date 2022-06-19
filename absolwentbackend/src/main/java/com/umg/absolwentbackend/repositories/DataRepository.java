@@ -1,15 +1,13 @@
 package com.umg.absolwentbackend.repositories;
 
-
 import com.umg.absolwentbackend.models.Data;
+import net.minidev.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
-
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.time.LocalDate;
 import java.util.*;
 
 @Repository
@@ -17,6 +15,7 @@ public class DataRepository
 {
     @Autowired
     JdbcTemplate jdbcTemplate;
+
     //TODO: Create mapper for data.
     class DataRowMapper implements RowMapper<Data>
     {
@@ -42,51 +41,68 @@ public class DataRepository
     }
 
     // TODO: Extract values from objects.
-    private List<String> getColumnValues(List<Data> buff, String nameOfColumn)
+    private List<JSONObject> getColumnValuesToJSONArray(List<Data> buff, String nameOfColumn)
     {
-        List<String> str_res = new ArrayList<String>();
+        List<JSONObject> res = new ArrayList<JSONObject>();
         for(Data d: buff)
         {
+            JSONObject object = new JSONObject();
             switch (nameOfColumn){
                 case "period_of_employement":
-                    str_res.add(d.getPeriod_of_employment());
+                    object.put("period_of_employement", d.getPeriod_of_employment());
+                    res.add(object);
                     break;
                 case "company_category":
-                    str_res.add(d.getCompany_category());
+                    object.put("company_category", d.getCompany_category());
+                    res.add(object);
                     break;
                 case "ending_date":
-                    str_res.add(d.getEnding_date().toString());
+                    object.put("ending_date", d.getEnding_date());
+                    res.add(object);
                     break;
                 case "data_id":
-                    str_res.add(d.getData_id()+"");
+                    object.put("data_id", d.getData_id());
+                    res.add(object);
                     break;
                 case "company_size":
-                    str_res.add(d.getCompany_size());
+                    object.put("company_size", d.getCompany_size());
+                    res.add(object);
                     break;
                 case "job_search_time":
-                    str_res.add(d.getJob_search_time());
+                    object.put("job_search_time", d.getJob_search_time());
+                    res.add(object);
                     break;
                 case "questionnarie_id":
-                    str_res.add(d.getQuestionnarie_id()+"");
+                    object.put("questionnarie_id", d.getQuestionnarie_id());
+                    res.add(object);
                     break;
                 case "proffesional_activity":
-                    str_res.add(d.isProffesional_activity()+"");
+                    object.put("proffesional_activity", d.isProffesional_activity());
+                    res.add(object);
                     break;
                 case "location":
-                    str_res.add(d.isLocation()+"");
+                    object.put("location", d.isLocation());
+                    res.add(object);
                     break;
                 case "training":
-                    str_res.add(d.isTraining()+"");
+                    object.put("training", d.isTraining());
+                    res.add(object);
                     break;
                 case "job_satisfaction":
-                    str_res.add(d.getJob_satisfaction());
+                    object.put("job_satisfaction", d.getJob_satisfaction());
+                    res.add(object);
                     break;
                 case "town_size":
-                    str_res.add(d.getTown_size());
+                    object.put("town_size", d.getTown_size());
+                    res.add(object);
+                    break;
+                case "earnings":
+                    object.put("earnings", d.getEarnings());
+                    res.add(object);
                     break;
             }
         }
-        return str_res;
+        return res;
     }
 
     // TODO: Return all data.
@@ -116,13 +132,13 @@ public class DataRepository
     }
 
     // TODO: Get period of employement by gender and year.
-    public List<String> getPeriodOfEmployementByGenderAndYear(String gender,Integer year)
+    public List<JSONObject> getPeriodOfEmployementByGenderAndYear(String gender,Integer year)
     {
         try
         {
             String sql_query = "SELECT * FROM absolvent.data WHERE gender ='"+ gender+"' AND ending_date = "+year;
             System.out.println("Query: "+sql_query+"\n");
-            return getColumnValues(jdbcTemplate.query(sql_query,new DataRowMapper()),"period_of_employement");
+            return getColumnValuesToJSONArray(jdbcTemplate.query(sql_query,new DataRowMapper()),"period_of_employement");
         } catch (Exception ex)
         {
             return null;
@@ -130,13 +146,13 @@ public class DataRepository
     }
 
     // TODO: Get company category.
-    public List<String> getCompanyCategoryByGenderAndYear(String gender,Integer year)
+    public List<JSONObject> getCompanyCategoryByGenderAndYear(String gender,Integer year)
     {
         try
         {
             String sql_query = "SELECT * FROM absolvent.data WHERE gender ='"+ gender+"' AND ending_date = "+year;
             System.out.println("Query: "+sql_query+"\n");
-            return getColumnValues(jdbcTemplate.query(sql_query, new DataRowMapper()), "company_category");
+            return getColumnValuesToJSONArray(jdbcTemplate.query(sql_query, new DataRowMapper()), "company_category");
         } catch (Exception ex)
         {
             return null;
@@ -144,13 +160,13 @@ public class DataRepository
     }
 
     // TODO: Get company size.
-    public List<String> getCompanySizeByGenderAndYear(String gender,Integer year)
+    public List<JSONObject> getCompanySizeByGenderAndYear(String gender,Integer year)
     {
         try
         {
             String sql_query = "SELECT * FROM absolvent.data WHERE gender ='"+ gender+"' AND ending_date = "+year;
             System.out.println("Query: "+sql_query+"\n");
-            return getColumnValues(jdbcTemplate.query(sql_query, new DataRowMapper()), "company_size");
+            return getColumnValuesToJSONArray(jdbcTemplate.query(sql_query, new DataRowMapper()), "company_size");
         } catch (Exception ex)
         {
             return null;
@@ -158,13 +174,27 @@ public class DataRepository
     }
 
     // TODO: Get job search time.
-    public List<String> getJobSearchTimeByGenderAndYear(String gender,Integer year)
+    public List<JSONObject> getJobSearchTimeByGenderAndYear(String gender,Integer year)
     {
         try
         {
             String sql_query = "SELECT * FROM absolvent.data WHERE gender ='"+ gender+"' AND ending_date = "+year;
             System.out.println("Query: "+sql_query+"\n");
-            return getColumnValues(jdbcTemplate.query(sql_query, new DataRowMapper()), "job_search_time");
+            return getColumnValuesToJSONArray(jdbcTemplate.query(sql_query, new DataRowMapper()), "job_search_time");
+        } catch (Exception ex)
+        {
+            return null;
+        }
+    }
+
+    // TODO: Get salary.
+    public List<JSONObject> getSalaryByGenderAndYear(String gender,Integer year)
+    {
+        try
+        {
+            String sql_query = "SELECT * FROM absolvent.data WHERE gender ='"+ gender+"' AND ending_date = "+year;
+            System.out.println("Query: "+sql_query+"\n");
+            return getColumnValuesToJSONArray(jdbcTemplate.query(sql_query, new DataRowMapper()), "earnings");
         } catch (Exception ex)
         {
             return null;
