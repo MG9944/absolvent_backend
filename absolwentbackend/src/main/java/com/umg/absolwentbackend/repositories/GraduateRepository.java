@@ -24,28 +24,27 @@ public class GraduateRepository {
     @Autowired
     JdbcTemplate jdbcTemplate;
 
-    private static final String SQL_ADD  = "INSERT INTO graduate(date_of_birth,email,name,lastname,graduation_year, faculty, field,title,group_name,gender) VALUES (?,?,?,?,?,?,?,?,?,?)";
+    private static final String SQL_ADD  = "INSERT INTO graduate(email,name,lastname,graduation_year, faculty, field,title,group_name,gender) VALUES (?,?,?,?,?,?,?,?,?)";
     private static final String SQL_COUNT_BY_EMAIL = "SELECT count(*) FROM graduate WHERE email=?;";
     private static final String SQL_FIND_BY_ID = "SELECT * FROM graduate WHERE graduate_id=?";
     private static final String SQL_FIND_BY_EMAIL = "SELECT email FROM graduate WHERE email=?";
     private static final String SQL_GET_EMAILS = "SELECT email,graduation_year,field,faculty,title,gender  FROM absolvent.graduate where group_name=?";
 
-    public Integer insertGraduate(String name, String lastName, String email, int graduation_year, String faculty, String field, Date date_of_birth,String title,String group,String gender) throws AuthenticationException
+    public Integer insertGraduate(String name, String lastName, String email, int graduation_year, String faculty, String field,String title,String group,String gender) throws AuthenticationException
     {
         try {
             KeyHolder keyHolder = new GeneratedKeyHolder();
             jdbcTemplate.update(connection -> {
                 PreparedStatement ps = connection.prepareStatement(SQL_ADD, Statement.RETURN_GENERATED_KEYS);
-                ps.setDate(1,date_of_birth);
-                ps.setString(2,email);
-                ps.setString(3,name);
-                ps.setString(4,lastName);
-                ps.setInt(5, graduation_year);
-                ps.setString(6,faculty);
-                ps.setString(7,field);
-                ps.setString(8,title);
-                ps.setString(9,group);
-                ps.setString(10,gender);
+                ps.setString(1,email);
+                ps.setString(2,name);
+                ps.setString(3,lastName);
+                ps.setInt(4, graduation_year);
+                ps.setString(5,faculty);
+                ps.setString(6,field);
+                ps.setString(7,title);
+                ps.setString(8,group);
+                ps.setString(9,gender);
                 return ps;
             },keyHolder);
             return (Integer) keyHolder.getKeys().get("graduate_id");
@@ -78,7 +77,6 @@ public class GraduateRepository {
                 rs.getString("name"),
                 rs.getString("lastname"),
                 rs.getString("gender"),
-                rs.getDate("date_of_birth"),
                 rs.getString("email"),
                 rs.getInt("graduation_year"),
                 rs.getString("field"),

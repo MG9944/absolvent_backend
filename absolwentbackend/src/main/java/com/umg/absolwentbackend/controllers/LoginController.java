@@ -64,7 +64,7 @@ public class LoginController {
         return token;
     }
 
-    @PostMapping("/pool")
+    @PostMapping("/survey")
     public ResponseEntity<Object> authPool(@RequestBody Map<String, Object> userMap) {
 
         String token = (String) userMap.get("token");
@@ -80,7 +80,7 @@ public class LoginController {
                 map.put("faculty",claims.get("faculty"));
                 map.put("title",claims.get("title"));
                 map.put("gender",claims.get("gender"));
-                map.put("year",claims.get("graduation_year"));
+                map.put("year",claims.get("graduationYear"));
                 Map<String, Object> map2 = new HashMap<>();
                 map2.put("data",map);
                 map2.put("success",true);
