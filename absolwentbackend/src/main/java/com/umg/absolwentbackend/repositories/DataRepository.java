@@ -5,14 +5,21 @@ import net.minidev.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
+import org.springframework.jdbc.support.GeneratedKeyHolder;
+import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
+
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.*;
 
 @Repository
 public class DataRepository
 {
+
+    final String SQL_ADD = "INSERT INTO absolvent.data(ending_date, gender, earnings, company_size, town_size, company_category, job_search_time, period_of_employement,field,faculty,title, location, proffesional_activity, job_satisfaction, training) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);";
     @Autowired
     JdbcTemplate jdbcTemplate;
 
@@ -201,13 +208,30 @@ public class DataRepository
         }
     }
 
-    // TODO: Send object to database.
-    public boolean sendData(Integer endingDate, String gender, String earning, String companySize, String townSize, String companyCategory, String jobSearchTime, String periodOfEmployment, Integer questionnarieId, boolean location, boolean proffesionalActivity, boolean jobSatisfaction, boolean training )
+    public boolean sendData(Integer endingDate, String gender, String earning, String companySize, String townSize, String companyCategory, String jobSearchTime, String periodOfEmployment, String field,String faculty ,String title, Integer questionnarieId, boolean location, boolean proffesionalActivity, String jobSatisfaction, boolean training)
     {
         try
         {
-            String sql_add  = "INSERT INTO absolvent.data(ending_date, gender, earnings, company_size, town_size, company_category, job_search_time, period_of_employement, questionnarie_id, location, proffesional_activity, job_satisfaction, training) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);";
-            jdbcTemplate.update(sql_add, endingDate, gender, earning, companySize, townSize, companyCategory, jobSearchTime, periodOfEmployment, questionnarieId, location, proffesionalActivity, jobSatisfaction,training);
+            KeyHolder keyHolder = new GeneratedKeyHolder();
+            jdbcTemplate.update(connection -> {
+                PreparedStatement ps = connection.prepareStatement(SQL_ADD, Statement.RETURN_GENERATED_KEYS);
+                ps.setInt(1,endingDate);
+                ps.setString(2,gender);
+                ps.setString(3,earning);
+                ps.setString(4,companySize);
+                ps.setString(5, townSize);
+                ps.setString(6,companyCategory);
+                ps.setString(7,jobSearchTime);
+                ps.setString(8,periodOfEmployment);
+                ps.setString(9,field);
+                ps.setString(10,faculty);
+                ps.setString(11,title);
+                ps.setBoolean(12,location);
+                ps.setBoolean(13,proffesionalActivity);
+                ps.setString(14,jobSatisfaction);
+                ps.setBoolean(15,training);
+                return ps;
+            },keyHolder);
             return true;
         }
         catch (Exception ex)

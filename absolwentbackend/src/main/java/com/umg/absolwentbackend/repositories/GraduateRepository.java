@@ -24,13 +24,11 @@ public class GraduateRepository {
     @Autowired
     JdbcTemplate jdbcTemplate;
 
-    private static final String SQL_ADD  = "INSERT INTO graduate(date_of_birth,email,name,lastname,graduation_year, faculty, field,tittle,group_name,gender) VALUES (?,?,?,?,?,?,?,?,?,?)";
+    private static final String SQL_ADD  = "INSERT INTO graduate(date_of_birth,email,name,lastname,graduation_year, faculty, field,title,group_name,gender) VALUES (?,?,?,?,?,?,?,?,?,?)";
     private static final String SQL_COUNT_BY_EMAIL = "SELECT count(*) FROM graduate WHERE email=?;";
     private static final String SQL_FIND_BY_ID = "SELECT * FROM graduate WHERE graduate_id=?";
     private static final String SQL_FIND_BY_EMAIL = "SELECT email FROM graduate WHERE email=?";
-    private static final String SQL_GET_EMAILS = "SELECT email,graduation_year,field,faculty,title  FROM absolvent.graduate where group_name=?";
-
-
+    private static final String SQL_GET_EMAILS = "SELECT email,graduation_year,field,faculty,title,gender  FROM absolvent.graduate where group_name=?";
 
     public Integer insertGraduate(String name, String lastName, String email, int graduation_year, String faculty, String field, Date date_of_birth,String title,String group,String gender) throws AuthenticationException
     {
@@ -84,7 +82,7 @@ public class GraduateRepository {
                 rs.getString("email"),
                 rs.getInt("graduation_year"),
                 rs.getString("field"),
-                rs.getString("tittle"),
+                rs.getString("title"),
                 rs.getString("faculty"),
                 rs.getString("group_name"));
     });

@@ -26,7 +26,7 @@ public class AuthFilter extends OncePerRequestFilter {
         HttpServletRequest httpRequest =  request;
         HttpServletResponse httpResponse = response;
 
-        String authHeader = httpRequest.getHeader("X-Authorization");
+        String authHeader = httpRequest.getHeader("Authorization");
         if(authHeader != null)
         {
             String[] authHeaderArr = authHeader.split("Bearer ");
@@ -42,18 +42,39 @@ public class AuthFilter extends OncePerRequestFilter {
                     httpRequest.setAttribute("admin", Boolean.parseBoolean(claims.get("admin").toString()));
                 }catch (Exception e) {
                     System.out.println("expired");
-                    httpResponse.sendError(HttpStatus.UNAUTHORIZED.value(), "invalid/expired token");
+                    StringBuilder sb = new StringBuilder();
+                    sb.append("{ ");
+                    sb.append("\"error\": \"true\",");
+                    sb.append("\"message\": \"Token Expired.\",");
+                    sb.append("} ");
+                    response.setContentType("application/json");
+                    response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+                    response.getWriter().write(sb.toString());
                     return;
                 }
             } else {
-                httpResponse.sendError(HttpStatus.UNAUTHORIZED.value(), "Authorization token must be Bearer [token]");
+                StringBuilder sb = new StringBuilder();
+                sb.append("{ ");
+                sb.append("\"error\": \"true\",");
+                sb.append("\"message\": \"Authorization token must be Bearer [token]\",");
+                sb.append("} ");
+                response.setContentType("application/json");
+                response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+                response.getWriter().write(sb.toString());
                 return;
             }
         }
         else
         {
             System.out.println("TEST");
-            httpResponse.sendError(HttpStatus.UNAUTHORIZED.value(), "Authorization token must be provided");
+            StringBuilder sb = new StringBuilder();
+            sb.append("{ ");
+            sb.append("\"error\": \"true\",");
+            sb.append("\"message\": \"Authorization token must be provided\",");
+            sb.append("} ");
+            response.setContentType("application/json");
+            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+            response.getWriter().write(sb.toString());
             return;
         }
         filterChain.doFilter(httpRequest, httpResponse);
@@ -66,6 +87,7 @@ public class AuthFilter extends OncePerRequestFilter {
         Map<String, Object> map = new HashMap<String, Object>();
         map.put("/api/admin/password/reset", true);
         map.put("/api/auth/admin", true);
+        map.put("/api/auth/pool",true);
         map.put("/api/public",true);
         String path = request.getRequestURI();
         return map.containsKey(path);

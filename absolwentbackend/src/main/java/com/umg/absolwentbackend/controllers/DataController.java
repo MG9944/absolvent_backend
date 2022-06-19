@@ -21,13 +21,6 @@ public class DataController
         return new ResponseEntity<>(dataService.findAll(), HttpStatus.OK);
     }
 
-    // URL: localhost:6362/s_api/data/
-    @PostMapping("/")
-    public boolean sendData(@RequestBody Data data)
-    {
-        return dataService.sendData(data.getEnding_date(), data.getGender(), data.getEarnings(), data.getCompany_size(), data.getTown_size(), data.getCompany_category(), data.getJob_search_time(), data.getPeriod_of_employment(), data.getQuestionnarie_id(), data.isLocation(), data.isProffesional_activity(), data.isLocation(), data.isTraining());
-    }
-
     // URL: localhost:6362/s_api/data/test
     @GetMapping("/test")
     public String testConnection()
