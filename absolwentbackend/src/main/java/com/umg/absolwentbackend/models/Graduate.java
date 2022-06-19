@@ -27,10 +27,6 @@ public class Graduate {
         return lastname;
     }
 
-    public Date getDate_of_birth() {
-        return date_of_birth;
-    }
-
     public String getEmail() {
         return email;
     }
