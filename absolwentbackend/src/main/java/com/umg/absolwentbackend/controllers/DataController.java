@@ -19,16 +19,17 @@ public class DataController
     @Autowired
     DataService dataService;
 
+    // --------------------------- ALL SIMPLE --------------------------------------------]
     // URL: localhost:6362/api/public/statistics/
     @GetMapping("")
     public ResponseEntity<Iterable<Data>> findAll()
     {
         List<Data> all = dataService.findAll();
-        System.out.println(all);
         return new ResponseEntity<>(all, HttpStatus.OK);
     }
+    // -----------------------------------------------------------------------------------]
 
-    // ------------------------------- TEST ------------------------------------]
+    // ------------------------------- TEST ----------------------------------------------]
     // URL: localhost:6362/api/public/statistics/test_json_object
     @GetMapping("/test_json_object")
     public ResponseEntity<JSONObject> test0()
@@ -45,10 +46,10 @@ public class DataController
     {
         return "Data controller is working !";
     }
-    // -------------------------------------------------------------------------]
-    // -------------------------------------------------------------------------]
+    // -----------------------------------------------------------------------------------]
+    // -----------------------------------------------------------------------------------]
 
-    // ------------------------------- ALL -------------------------------------]
+    // ------------------------------- ALL ------------------------------------------------]
     // URL: localhost:6362/api/public/statistics/all/2020?gender=mezczyzna
     @GetMapping("/all/{year}")
     public ResponseEntity<Iterable<Data>> getAllByGenderAndYear(@PathVariable("year") Integer year, @RequestParam("gender") String gender)
@@ -56,7 +57,7 @@ public class DataController
         System.out.println("Get data-----]\nGender: "+gender+"\nYear: "+year+"\nGet data-----]");
         return new ResponseEntity<Iterable<Data>>(dataService.getAllByGenderAndYear(gender, year), HttpStatus.OK);
     }
-    // --------------------------------------------------------------------------]
+    // ------------------------------------------------------------------------------------]
 
     // ------------------------------- YEAR -----------------------------------------------]
     // URL: localhost:6362/api/public/statistics/period/2020?gender=mezczyzna
@@ -181,7 +182,7 @@ public class DataController
     }
     // ------------------------------------------------------------------------------------]
 
-    // URL: localhost:6362/api/public/statistics/jobSearchTime/2020?gender=mezczyzna
+    // URL: localhost:6362/api/public/statistics/s_jobSearchTime/2020?gender=mezczyzna
     @GetMapping(value="/s_jobSearchTime/{year}")
     public @ResponseBody ResponseEntity<JSONObject>  getSSearchTimeByGenderAndYear (@PathVariable("year") Integer year, @RequestParam("gender") String gender)
     {
@@ -189,7 +190,7 @@ public class DataController
         return new ResponseEntity<>(dataService.getJobSearchTimeByGenderAndYear(gender, year), HttpStatus.OK);
     }
 
-    // --------------------------------- SALARY -----------------------------------]
+    // -------------------------------------- SALARY --------------------------------------]
     // URL: localhost:6362/api/public/statistics/salary/2020?gender=mezczyzna
     @GetMapping(value="/salary/{year}")
     public @ResponseBody ResponseEntity<JSONObject> getSalaryByGenderAndYear(@PathVariable("year") Integer year, @RequestParam("gender") String gender)
@@ -220,5 +221,5 @@ public class DataController
         System.out.println("Get data-----]\nGender: "+gender+"\nYear: "+year+"\nGet data-----]");
         return new ResponseEntity<>(dataService.getSalaryByGenderAndYear(gender, year), HttpStatus.OK);
     }
-    // ------------------------------------------------------------------------------]
+    // --------------------------------------------------------------------------------------]
 }
