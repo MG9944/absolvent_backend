@@ -33,28 +33,28 @@ public class DataService {
     }
 
     // TODO: Done!
-    public List<JSONObject> getPeriodOfEmployementByGenderAndYear(String gender,Integer year)
+    public JSONObject getPeriodOfEmployementByGenderAndYear(String gender,Integer year)
     {
         return dataRepository.getPeriodOfEmployementByGenderAndYear(gender, year);
     }
 
     // TODO: Done!
-    public List<JSONObject> getCompanySizeByGenderAndYear(String gender,Integer year) {
-        return dataRepository.getCompanySizeByGenderAndYear(gender,year);
-    }
-
-    // TODO: Done!
-    public List<JSONObject> getCompanyCategoryByGenderAndYear(String gender,Integer year) {
+    public JSONObject getCompanyCategoryByGenderAndYear(String gender,Integer year) {
         return dataRepository.getCompanyCategoryByGenderAndYear(gender, year);
     }
 
     // TODO: Done!
-    public List<JSONObject> getJobSearchTimeByGenderAndYear(String gender,Integer year) {
+    public JSONObject getCompanySizeByGenderAndYear(String gender,Integer year) {
+        return dataRepository.getCompanySizeByGenderAndYear(gender,year);
+    }
+
+    // TODO: Done!
+    public JSONObject getJobSearchTimeByGenderAndYear(String gender,Integer year) {
         return dataRepository.getJobSearchTimeByGenderAndYear(gender, year);
     }
 
     // TODO: Done!
-    public List<JSONObject> getSalaryByGenderAndYear(String gender,Integer year) {
+    public JSONObject getSalaryByGenderAndYear(String gender,Integer year) {
         return dataRepository.getSalaryByGenderAndYear(gender, year);
     }
 }
