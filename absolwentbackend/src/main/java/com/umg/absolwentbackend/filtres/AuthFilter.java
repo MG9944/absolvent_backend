@@ -27,6 +27,7 @@ public class AuthFilter extends OncePerRequestFilter {
         HttpServletResponse httpResponse = response;
 
         String authHeader = httpRequest.getHeader("Authorization");
+
         if(authHeader != null)
         {
             String[] authHeaderArr = authHeader.split("Bearer ");
@@ -89,6 +90,7 @@ public class AuthFilter extends OncePerRequestFilter {
         map.put("/api/auth/admin", true);
         map.put("/api/auth/pool",true);
         map.put("/api/public",true);
+        map.put("/api/public/",true);
         String path = request.getRequestURI();
         return map.containsKey(path);
     }
