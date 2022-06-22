@@ -222,4 +222,31 @@ public class DataController
         return new ResponseEntity<>(dataService.getSalaryByGenderAndYear(gender, year), HttpStatus.OK);
     }
     // --------------------------------------------------------------------------------------]
+
+    // --------------------------------- TOWN SIZE ------------------------------------------]
+    // URL: localhost:6362/api/public/statistics/townsize/2020?gender=mezczyzna
+    @GetMapping(value="/townsize/{year}")
+    public @ResponseBody ResponseEntity<JSONObject>  getTownSize (@PathVariable("year") Integer year, @RequestParam("gender") String gender)
+    {
+        System.out.println("Get data-----]\nGender: "+gender+"\nYear: "+year+"\nGet data-----]");
+        JSONArray jsonArray = new JSONArray();
+        String[]data={"2410-3400", "3401-6900", "6901-8300", "8301-9900", "9901-11400", "11401-14900", "14901-16000", "16000+"};
+        int[]count={124, 32, 13, 269, 48, 100, 146, 90};
+        int ans = 0;
+        for(int i=1; i<=8; i++)
+        {
+            JSONObject obj = new JSONObject();
+            obj.put("id", i);
+            obj.put("name", data[i-1]);
+            obj.put("count", count[i-1]);
+            ans += count[i-1];
+            jsonArray.add(obj);
+        }
+        JSONObject data_object = new JSONObject();
+        data_object.put("answersCount", ans);
+        data_object.put("answers", jsonArray);
+        data_object.put("name", "Wielkości miast");
+        return new ResponseEntity<>(data_object, HttpStatus.OK);
+    }
+    // --------------------------------------------------------------------------------------]
 }
