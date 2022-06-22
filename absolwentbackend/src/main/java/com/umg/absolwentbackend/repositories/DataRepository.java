@@ -41,8 +41,7 @@ public class DataRepository
                     rs.getBoolean("training"),
                     rs.getBoolean("location"),
                     rs.getBoolean("proffesional_activity"),
-                    rs.getInt("data_id"),
-                    rs.getInt("questionnarie_id")
+                    rs.getInt("data_id")
             );
         }
     }
@@ -79,10 +78,10 @@ public class DataRepository
                     object.put("job_search_time", d.getJob_search_time());
                     res.add(object);
                     break;
-                case "questionnarie_id":
+                /*case "questionnarie_id":
                     object.put("questionnarie_id", d.getQuestionnarie_id());
                     res.add(object);
-                    break;
+                    break;*/
                 case "proffesional_activity":
                     object.put("proffesional_activity", d.isProffesional_activity());
                     res.add(object);
@@ -115,14 +114,14 @@ public class DataRepository
     // TODO: Return all data.
     public List<Data> findAll()
     {
-        try {
+        //try {
             String sql_query = "SELECT * FROM absolvent.data";
             System.out.println("Query: " + sql_query + "\n");
             return jdbcTemplate.query(sql_query, new DataRowMapper());
-        }catch (Exception ex)
-        {
-            return null;
-        }
+       // }catch (Exception ex)
+        //{
+        //    return null;
+       // }
     }
 
     // TODO: Get salary by gender and year.
