@@ -18,9 +18,8 @@ public class Data implements Serializable
     private boolean location;
     private boolean proffesional_activity;
     private int data_id;
-    private int questionnarie_id;
 
-    public Data(Integer ending_date, String gender, String earnings, String company_size, String town_size, String company_category, String job_search_time, String job_satisfaction, String period_of_employment, boolean training, boolean location, boolean proffesional_activity, int data_id, int questionnarie_id) {
+    public Data(Integer ending_date, String gender, String earnings, String company_size, String town_size, String company_category, String job_search_time, String job_satisfaction, String period_of_employment, boolean training, boolean location, boolean proffesional_activity, int data_id) {
         this.ending_date = ending_date;
         this.gender = gender;
         this.earnings = earnings;
@@ -34,7 +33,6 @@ public class Data implements Serializable
         this.location = location;
         this.proffesional_activity = proffesional_activity;
         this.data_id = data_id;
-        this.questionnarie_id = questionnarie_id;
     }
 
     public Integer getEnding_date() {
@@ -89,9 +87,6 @@ public class Data implements Serializable
         return data_id;
     }
 
-    public int getQuestionnarie_id() {
-        return questionnarie_id;
-    }
 
     @Override
     public String toString() {
@@ -109,7 +104,7 @@ public class Data implements Serializable
                 ", location=" + location +
                 ", proffesional_activity=" + proffesional_activity +
                 ", data_id=" + data_id +
-                ", questionnarie_id=" + questionnarie_id +
+                //", questionnarie_id=" + questionnarie_id +
                 '}';
     }
 }

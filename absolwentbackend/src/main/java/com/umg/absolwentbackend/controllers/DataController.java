@@ -27,7 +27,7 @@ public class DataController
     DataService dataService;
 
     // URL: localhost:6362/api/statistics/
-    @GetMapping("/")
+    @GetMapping("")
     public ResponseEntity<Iterable<Data>> findAll()
     {
         List<Data> all = dataService.findAll();
