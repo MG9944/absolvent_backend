@@ -47,6 +47,8 @@ public class LoginController {
             return new ResponseEntity<>(map, HttpStatus.UNAUTHORIZED);
         }
         Map<String, Object> map = new HashMap<>();
+        map.put("id",1);
+        map.put("login",uni.getLogin());
         map.put("success", true);
         map.put("token", generateToken(uni));
         return new ResponseEntity<>(map, HttpStatus.OK);
