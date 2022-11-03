@@ -14,8 +14,6 @@
     <name>absolwentbackend</name>
     <description>absolwentbackend</description>
     <properties>
-         <sonar.organization>mg9944</sonar.organization>
-         <sonar.host.url>https://sonarcloud.io</sonar.host.url>
         <java.version>17</java.version>
         <vaadin.version>23.0.9</vaadin.version>
     </properties>
