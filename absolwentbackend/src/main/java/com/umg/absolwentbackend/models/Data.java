@@ -6,6 +6,8 @@ import java.sql.Date;
 public class Data implements Serializable
 {
     private Integer ending_date;
+
+    private Integer filling_year;
     private String gender;
     private String earnings;
     private String company_size;
@@ -18,6 +20,12 @@ public class Data implements Serializable
     private boolean location;
     private boolean proffesional_activity;
     private int data_id;
+
+
+    public Data()
+    {
+
+    }
 
     public Data(Integer ending_date, String gender, String earnings, String company_size, String town_size, String company_category, String job_search_time, String job_satisfaction, String period_of_employment, boolean training, boolean location, boolean proffesional_activity, int data_id) {
         this.ending_date = ending_date;
@@ -34,6 +42,7 @@ public class Data implements Serializable
         this.proffesional_activity = proffesional_activity;
         this.data_id = data_id;
     }
+
 
     public Integer getEnding_date() {
         return ending_date;
@@ -86,7 +95,6 @@ public class Data implements Serializable
     public int getData_id() {
         return data_id;
     }
-
 
     @Override
     public String toString() {

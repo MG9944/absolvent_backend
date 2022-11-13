@@ -1,8 +1,6 @@
 package com.umg.absolwentbackend.controllers;
-import com.umg.absolwentbackend.models.Data;
-import com.umg.absolwentbackend.services.DataService;
-import net.minidev.json.JSONArray;
-import net.minidev.json.JSONObject;
+import com.umg.absolwentbackend.models.Results;
+import com.umg.absolwentbackend.repositories.DataRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -11,182 +9,237 @@ import org.springframework.web.bind.annotation.*;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @RestController
-@RequestMapping("/api/public/statistics") // TODO: Must be change to: /api/data -> Filter settings must be set.
+@RequestMapping("/api/data")
 public class DataController
 {
-    /*
-
-    Połączenie z bazą nie działało.
-    Pozdro.
-
-     */
-
     @Autowired
-    DataService dataService;
-
-    // URL: localhost:6362/api/statistics/
-    @GetMapping("")
-    public ResponseEntity<Iterable<Data>> findAll()
+    DataRepository dataRepository;
+    @GetMapping("/{version}")
+    public ResponseEntity<Map<String,Object>> getResults(@PathVariable("version") String version)
     {
-        List<Data> all = dataService.findAll();
-        System.out.println(all);
-        return new ResponseEntity<>(all, HttpStatus.OK);
-    }
+        Map<String, Object> map = new HashMap<>();
 
-    // URL: localhost:6362/api/statistics/test
-    @GetMapping("/test_json_object")
-    public ResponseEntity<JSONObject> test0()
-    {
-        JSONObject obj = new JSONObject();
-        obj.put("Test0", "Value - test 0");
-        obj.put("Test1", "Value - test 1");
-        return new ResponseEntity<>(obj, HttpStatus.OK);
-    }
 
-    // URL: localhost:6362/api/statistics/test
-    @GetMapping("/test_string")
-    public String testConnection()
-    {
-        return "Data controller is working !";
-    }
-
-    // URL: localhost:6362/api/statistics/all/2020?gender=mezczyzna
-    @GetMapping("/all/{year}")
-    public ResponseEntity<Iterable<Data>> getAllByGenderAndYear(@PathVariable("year") Integer year, @RequestParam("gender") String gender)
-    {
-        System.out.println("Get data-----]\nGender: "+gender+"\nYear: "+year+"\nGet data-----]");
-        return new ResponseEntity<Iterable<Data>>(dataService.getAllByGenderAndYear(gender, year), HttpStatus.OK);
-    }
-
-    // URL: localhost:6362/api/public/statistics/period/2020?gender=mezczyzna
-    @GetMapping("/period/{year}")
-    public ResponseEntity<JSONObject> getPeriodOfEmployementByGenderAndYear (@PathVariable("year") Integer year, @RequestParam("gender") String gender)
-    {
-        /*
-        System.out.println("Get data-----]\nGender: "+gender+"\nYear: "+year+"\nGet data-----]");
-        return new ResponseEntity<>(dataService.getPeriodOfEmployementByGenderAndYear(gender, year), HttpStatus.OK);
-         */
-
-        JSONArray jsonArray = new JSONArray();
-        String[]data={"2015", "2019", "2014", "2012", "2011", "2000", "2022", "2001"};
-        int[]count={154, 52, 63, 169, 38, 90, 146, 9};
-        for(int i=1; i<=8; i++)
-        {
-            JSONObject obj = new JSONObject();
-            obj.put("id", i);
-            obj.put("name", data[i-1]);
-            obj.put("count", count[i-1]);
-            jsonArray.add(obj);
+        switch(version){
+            //TODO - DONE!!!
+            case "year":
+            {
+                map.put("success", true);
+                map.put("status", 200);
+                Map<String, Object> data = new HashMap<>();
+                ArrayList<Integer> years = new ArrayList<>();
+                ArrayList<Map<String,Object>> paMaps = new ArrayList<>();
+                ArrayList<Map<String,Object>> poeMaps = new ArrayList<>();
+                ArrayList<Map<String,Object>> jsMaps = new ArrayList<>();
+                ArrayList<Map<String,Object>> tMaps = new ArrayList<>();
+                ArrayList<Map<String,Object>> eMaps = new ArrayList<>();
+                List<Results> List = dataRepository.getPaCountByYear();
+                for (Results R:List) {
+                    if(years.indexOf(R.getFilling_year()) == -1) {
+                        years.add(R.getFilling_year());
+                        paMaps.add(new HashMap<>());
+                        poeMaps.add(new HashMap<>());
+                        jsMaps.add(new HashMap<>());
+                        tMaps.add(new HashMap<>());
+                        eMaps.add(new HashMap<>());
+                    }
+                    paMaps.get(years.indexOf(R.getFilling_year())).put(R.getBoolValue().toString(), R.getCount());
+                }
+                List = dataRepository.getPoeCountByYear();
+                for (Results R:List) {
+                    poeMaps.get(years.indexOf(R.getFilling_year())).put(R.getStringValue(), R.getCount());
+                }
+                List = dataRepository.getJsCountByYear();
+                for (Results R:List) {
+                    jsMaps.get(years.indexOf(R.getFilling_year())).put(R.getStringValue(), R.getCount());
+                }
+                List = dataRepository.getTCountByYear();
+                for (Results R:List) {
+                    tMaps.get(years.indexOf(R.getFilling_year())).put(R.getStringValue(), R.getCount());
+                }
+                List = dataRepository.getECountByYear();
+                for (Results R:List) {
+                   eMaps.get(years.indexOf(R.getFilling_year())).put(R.getStringValue(), R.getCount());
+                }
+                Map<String, Object> year = new HashMap<>();
+                for(int i = 0;i<years.size();i++)
+                {
+                    year.put("proffesional_activity",paMaps.get(i));
+                    year.put("period_of_employment",poeMaps.get(i));
+                    year.put("job_satisfaction",jsMaps.get(i));
+                    year.put("title",tMaps.get(i));
+                    year.put("earnings",eMaps.get(i));
+                    data.put(years.get(i).toString(),year);
+                    year = new HashMap<>();
+                }
+                map.put("data",data);
+                return new ResponseEntity<>(map, HttpStatus.OK);
+            }
+            case "sex":
+            {
+                map.put("success", true);
+                map.put("status", 200);
+                Map<String, Object> data = new HashMap<>();
+                ArrayList<String> sexes = new ArrayList<>();
+                ArrayList<Map<String,Object>> eMaps = new ArrayList<>();
+                ArrayList<Map<String,Object>> jstMaps = new ArrayList<>();
+                ArrayList<Map<String,Object>> csMaps = new ArrayList<>();
+                ArrayList<Map<Boolean,Object>> tMaps = new ArrayList<>();
+                ArrayList<Map<String,Object>> tsMaps = new ArrayList<>();
+                List<Results> List = dataRepository.getECountBySex();
+                for (Results R:List) {
+                    if(sexes.indexOf(R.getStringKey()) == -1) {
+                        sexes.add(R.getStringKey());
+                        eMaps.add(new HashMap<>());
+                        jstMaps.add(new HashMap<>());
+                        csMaps.add(new HashMap<>());
+                        tMaps.add(new HashMap<>());
+                        tsMaps.add(new HashMap<>());
+                    }
+                    eMaps.get(sexes.indexOf(R.getStringKey())).put(R.getStringValue().toString(), R.getCount());
+                }
+                List = dataRepository.getJstCountBySex();
+                for (Results R:List) {
+                    jstMaps.get(sexes.indexOf(R.getStringKey())).put(R.getStringValue(), R.getCount());
+                }
+                List = dataRepository.getCsCountBySex();
+                for (Results R:List) {
+                    csMaps.get(sexes.indexOf(R.getStringKey())).put(R.getStringValue(), R.getCount());
+                }
+                List = dataRepository.getTCountBySex();
+                for (Results R:List) {
+                    tMaps.get(sexes.indexOf(R.getStringKey())).put(R.getBoolValue(), R.getCount());
+                }
+                List = dataRepository.getTsCountBySex();
+                for (Results R:List) {
+                    tsMaps.get(sexes.indexOf(R.getStringKey())).put(R.getStringValue(), R.getCount());
+                }
+                Map<String, Object> sex = new HashMap<>();
+                for(int i = 0;i<sexes.size();i++)
+                {
+                    sex.put("earnings",eMaps.get(i));
+                    sex.put("job_search_time",jstMaps.get(i));
+                    sex.put("company_size",csMaps.get(i));
+                    sex.put("training",tMaps.get(i));
+                    sex.put("town_size",tsMaps.get(i));
+                    data.put(sexes.get(i).toString(),sex);
+                    sex = new HashMap<>();
+                }
+                map.put("data",data);
+                return new ResponseEntity<>(map, HttpStatus.OK);
+            }
+            case "earnings":
+            {
+                map.put("success", true);
+                map.put("status", 200);
+                Map<String, Object> data = new HashMap<>();
+                ArrayList<String> earnings = new ArrayList<>();
+                ArrayList<Map<String,Object>> csMaps = new ArrayList<>();
+                ArrayList<Map<String,Object>> tsMaps = new ArrayList<>();
+                ArrayList<Map<String,Object>> ccMaps = new ArrayList<>();
+                ArrayList<Map<String,Object>> facultyMaps = new ArrayList<>();
+                ArrayList<Map<String,Object>> tMaps = new ArrayList<>();
+                ArrayList<Map<String,Object>> fieldMaps = new ArrayList<>();
+                List<Results> List = dataRepository.getCsCountByEarnings();
+                for (Results R:List) {
+                    if(earnings.indexOf(R.getStringKey()) == -1) {
+                        earnings.add(R.getStringKey());
+                        csMaps.add(new HashMap<>());
+                        tsMaps.add(new HashMap<>());
+                        ccMaps.add(new HashMap<>());
+                        facultyMaps.add(new HashMap<>());
+                        tMaps.add(new HashMap<>());
+                        fieldMaps.add(new HashMap<>());
+                    }
+                    csMaps.get(earnings.indexOf(R.getStringKey())).put(R.getStringValue().toString(), R.getCount());
+                }
+                List = dataRepository.getTsCountByEarnings();
+                for (Results R:List) {
+                    tsMaps.get(earnings.indexOf(R.getStringKey())).put(R.getStringValue(), R.getCount());
+                }
+                List = dataRepository.getCcCountByEarnings();
+                for (Results R:List) {
+                    ccMaps.get(earnings.indexOf(R.getStringKey())).put(R.getStringValue(), R.getCount());
+                }
+                List = dataRepository.getFacultyCountByEarnings();
+                for (Results R:List) {
+                    facultyMaps.get(earnings.indexOf(R.getStringKey())).put(R.getStringValue(), R.getCount());
+                }
+                List = dataRepository.getTCountByEarnings();
+                for (Results R:List) {
+                    tMaps.get(earnings.indexOf(R.getStringKey())).put(R.getStringValue(), R.getCount());
+                }
+                List = dataRepository.getFieldCountByEarnings();
+                for (Results R:List) {
+                    fieldMaps.get(earnings.indexOf(R.getStringKey())).put(R.getStringValue(), R.getCount());
+                }
+                Map<String, Object> earning = new HashMap<>();
+                for(int i = 0;i<earnings.size();i++)
+                {
+                    earning.put("company_size",csMaps.get(i));
+                    earning.put("town_size",tsMaps.get(i));
+                    earning.put("company_category",ccMaps.get(i));
+                    earning.put("faculty",facultyMaps.get(i));
+                    earning.put("title",tMaps.get(i));
+                    earning.put("field",fieldMaps.get(i));
+                    data.put(earnings.get(i).toString(),earning);
+                    earning = new HashMap<>();
+                }
+                map.put("data",data);
+                return new ResponseEntity<>(map, HttpStatus.OK);
+            }
+            case "faculty":
+            {
+                map.put("success", true);
+                map.put("status", 200);
+                Map<String, Object> data = new HashMap<>();
+                ArrayList<String> facultys = new ArrayList<>();
+                ArrayList<Map<String,Object>> ccMaps = new ArrayList<>();
+                ArrayList<Map<String,Object>> jstMaps = new ArrayList<>();
+                ArrayList<Map<String,Object>> jsMaps = new ArrayList<>();
+                List<Results> List = dataRepository.getCcCountByFaculty();
+                for (Results R:List) {
+                    if(facultys.indexOf(R.getStringKey()) == -1) {
+                        facultys.add(R.getStringKey());
+                        ccMaps.add(new HashMap<>());
+                        jstMaps.add(new HashMap<>());
+                        jsMaps.add(new HashMap<>());
+                    }
+                    ccMaps.get(facultys.indexOf(R.getStringKey())).put(R.getStringValue().toString(), R.getCount());
+                }
+                List = dataRepository.getJstCountByFaculty();
+                for (Results R:List) {
+                    jstMaps.get(facultys.indexOf(R.getStringKey())).put(R.getStringValue(), R.getCount());
+                }
+                List = dataRepository.getJsCountByFaculty();
+                for (Results R:List) {
+                    jsMaps.get(facultys.indexOf(R.getStringKey())).put(R.getStringValue(), R.getCount());
+                }
+                Map<String, Object> faculty = new HashMap<>();
+                for(int i = 0;i<facultys.size();i++)
+                {
+                    faculty.put("company_category",ccMaps.get(i));
+                    faculty.put("job_search_time",jstMaps.get(i));
+                    faculty.put("job_satisfaction",jsMaps.get(i));
+                    data.put(facultys.get(i).toString(),faculty);
+                    faculty = new HashMap<>();
+                }
+                map.put("data",data);
+                return new ResponseEntity<>(map, HttpStatus.OK);
+            }
+            default:
+            {
+                map.put("success", false);
+                map.put("status", 404);
+                break;
+            }
         }
-        JSONObject data_object = new JSONObject();
-        data_object.put("answersCount", 721);
-        data_object.put("answers", jsonArray);
-        data_object.put("name", "Rok zatrudnienia");
-        return new ResponseEntity<>(data_object, HttpStatus.OK);
+        return new ResponseEntity<>(map, HttpStatus.NOT_FOUND);
     }
 
-    // URL: localhost:6362/api/public/statistics/company/2020?gender=mezczyzna
-    @GetMapping("/company/{year}")
-    public ResponseEntity<JSONObject> getCompanyCategoryByGenderAndYear (@PathVariable("year") Integer year, @RequestParam("gender") String gender)
-    {
-        /*
-        System.out.println("Get data-----]\nGender: "+gender+"\nYear: "+year+"\nGet data-----]");
-        return new ResponseEntity<>(dataService.getCompanyCategoryByGenderAndYear(gender, year), HttpStatus.OK);
-         */
-        JSONArray jsonArray = new JSONArray();
-        String[]data={"AMD", "Intel", "Sii", "Nvidia", "Boeing", "WP", "NASA", "Meta"};
-        int[]count={154, 52, 63, 169, 38, 90, 146, 9};
-        for(int i=1; i<=8; i++)
-        {
-            JSONObject obj = new JSONObject();
-            obj.put("id", i);
-            obj.put("name", data[i-1]);
-            obj.put("count", count[i-1]);
-            jsonArray.add(obj);
-        }
-        JSONObject data_object = new JSONObject();
-        data_object.put("answersCount", 721);
-        data_object.put("answers", jsonArray);
-        data_object.put("name", "Firmy");
-        return new ResponseEntity<>(data_object, HttpStatus.OK);
-    }
 
-    // URL: localhost:6362/api/public/statistics/companySize/2020?gender=mezczyzna
-    @GetMapping("/companySize/{year}")
-    public ResponseEntity<JSONObject> getCompanySizeByGenderAndYear (@PathVariable("year") Integer year, @RequestParam("gender") String gender)
-    {
-        /*
-        System.out.println("Get data-----]\nGender: "+gender+"\nYear: "+year+"\nGet data-----]");
-        return new ResponseEntity<>(dataService.getCompanySizeByGenderAndYear(gender, year), HttpStatus.OK);
-         */
-        JSONArray jsonArray = new JSONArray();
-        String[]data={"30-44", "44-59", "59-74", "74-89", "89-104", "104-119", "119-149", "149+"};
-        int[]count={154, 52, 63, 169, 38, 90, 146, 9};
-        for(int i=1; i<=8; i++)
-        {
-            JSONObject obj = new JSONObject();
-            obj.put("id", i);
-            obj.put("name", data[i-1]);
-            obj.put("count", count[i-1]);
-            jsonArray.add(obj);
-        }
-        JSONObject data_object = new JSONObject();
-        data_object.put("answersCount", 721);
-        data_object.put("answers", jsonArray);
-        data_object.put("name", "Wielkość firmy");
-        return new ResponseEntity<>(data_object, HttpStatus.OK);
-    }
 
-    // URL: localhost:6362/api/public/statistics/jobSearchTime/2020?gender=mezczyzna
-    @GetMapping(value="/jobSearchTime/{year}")
-    public @ResponseBody ResponseEntity<JSONObject>  getSearchTimeByGenderAndYear (@PathVariable("year") Integer year, @RequestParam("gender") String gender)
-    {
-        /*
-        System.out.println("Get data-----]\nGender: "+gender+"\nYear: "+year+"\nGet data-----]");
-        return new ResponseEntity<>(dataService.getJobSearchTimeByGenderAndYear(gender, year), HttpStatus.OK);
-         */
-
-        JSONArray jsonArray = new JSONArray();
-        String[]data={"30-44", "44-59", "59-74", "74-89", "89-104", "104-119", "119-149", "149+"};
-        int[]count={154, 52, 63, 169, 38, 90, 146, 9};
-        for(int i=1; i<=8; i++)
-        {
-            JSONObject obj = new JSONObject();
-            obj.put("id", i);
-            obj.put("name", data[i-1]);
-            obj.put("count", count[i-1]);
-            jsonArray.add(obj);
-        }
-        JSONObject data_object = new JSONObject();
-        data_object.put("answersCount", 721);
-        data_object.put("answers", jsonArray);
-        data_object.put("name", "Czas szukania pracy");
-        return new ResponseEntity<>(data_object, HttpStatus.OK);
-    }
-
-    // URL: localhost:6362/api/public/statistics/salary/2020?gender=mezczyzna
-    @GetMapping(value="/salary/{year}")
-    public @ResponseBody ResponseEntity<JSONObject> getSalaryByGenderAndYear(@PathVariable("year") Integer year, @RequestParam("gender") String gender) {
-        System.out.println("Get data-----]\nGender: "+gender+"\nYear: "+year+"\nGet data-----]");
-
-        JSONArray jsonArray = new JSONArray();
-        String[]data={"3010-4400", "4401-5900", "5901-7400", "7401-8900", "8901-10400", "10401-11900", "11901-14900", "14900+"};
-        int[]count={154, 52, 63, 169, 38, 90, 146, 9};
-        for(int i=1; i<=8; i++)
-        {
-            JSONObject obj = new JSONObject();
-            obj.put("id", i);
-            obj.put("name", data[i-1]);
-            obj.put("count", count[i-1]);
-            jsonArray.add(obj);
-        }
-        JSONObject data_object = new JSONObject();
-        data_object.put("answersCount", 721);
-        data_object.put("answers", jsonArray);
-        data_object.put("name", "Przedział zarobkowy brutto");
-
-        return new ResponseEntity<>(data_object, HttpStatus.OK);
-    }
 }

@@ -91,6 +91,7 @@ public class AuthFilter extends OncePerRequestFilter {
         map.put("/api/auth/pool",true);
         map.put("/api/public",true);
         map.put("/api/public/",true);
+        map.put("/api/data",true);
         String path = request.getRequestURI();
         return map.containsKey(path);
     }

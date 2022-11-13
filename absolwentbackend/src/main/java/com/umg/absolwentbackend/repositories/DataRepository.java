@@ -1,6 +1,9 @@
 package com.umg.absolwentbackend.repositories;
 
 import com.umg.absolwentbackend.models.Data;
+import com.umg.absolwentbackend.models.Graduate;
+import com.umg.absolwentbackend.models.Questionnaire;
+import com.umg.absolwentbackend.models.Results;
 import net.minidev.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -18,194 +21,34 @@ import java.util.*;
 @Repository
 public class DataRepository
 {
-
-    final String SQL_ADD = "INSERT INTO absolvent.data(ending_date, gender, earnings, company_size, town_size, company_category, job_search_time, period_of_employement,field,faculty,title, location, proffesional_activity, job_satisfaction, training) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);";
     @Autowired
     JdbcTemplate jdbcTemplate;
 
-    //TODO: Create mapper for data.
-    class DataRowMapper implements RowMapper<Data>
-    {
-        @Override
-        public Data mapRow(ResultSet rs, int rowNum) throws SQLException {
-            return new Data(
-                    rs.getInt("ending_date"),
-                    rs.getString("gender"),
-                    rs.getString("earnings"),
-                    rs.getString("company_size"),
-                    rs.getString("town_size"),
-                    rs.getString("company_category"),
-                    rs.getString("job_search_time"),
-                    rs.getString("job_satisfaction"),
-                    "1",
-                    rs.getBoolean("training"),
-                    rs.getBoolean("location"),
-                    rs.getBoolean("proffesional_activity"),
-                    rs.getInt("data_id")
-            );
-        }
-    }
+    final String SQL_ADD = "INSERT INTO absolvent.data(ending_date, gender, earnings, company_size, town_size, company_category, job_search_time, period_of_employement,field,faculty,title, location, proffesional_activity, job_satisfaction, training, questionnarieId) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);";
 
-    // TODO: Extract values from objects.
-    private List<JSONObject> getColumnValuesToJSONArray(List<Data> buff, String nameOfColumn)
-    {
-        List<JSONObject> res = new ArrayList<JSONObject>();
-        for(Data d: buff)
-        {
-            JSONObject object = new JSONObject();
-            switch (nameOfColumn){
-                case "period_of_employement":
-                    object.put("period_of_employement", d.getPeriod_of_employment());
-                    res.add(object);
-                    break;
-                case "company_category":
-                    object.put("company_category", d.getCompany_category());
-                    res.add(object);
-                    break;
-                case "ending_date":
-                    object.put("ending_date", d.getEnding_date());
-                    res.add(object);
-                    break;
-                case "data_id":
-                    object.put("data_id", d.getData_id());
-                    res.add(object);
-                    break;
-                case "company_size":
-                    object.put("company_size", d.getCompany_size());
-                    res.add(object);
-                    break;
-                case "job_search_time":
-                    object.put("job_search_time", d.getJob_search_time());
-                    res.add(object);
-                    break;
-                /*case "questionnarie_id":
-                    object.put("questionnarie_id", d.getQuestionnarie_id());
-                    res.add(object);
-                    break;*/
-                case "proffesional_activity":
-                    object.put("proffesional_activity", d.isProffesional_activity());
-                    res.add(object);
-                    break;
-                case "location":
-                    object.put("location", d.isLocation());
-                    res.add(object);
-                    break;
-                case "training":
-                    object.put("training", d.isTraining());
-                    res.add(object);
-                    break;
-                case "job_satisfaction":
-                    object.put("job_satisfaction", d.getJob_satisfaction());
-                    res.add(object);
-                    break;
-                case "town_size":
-                    object.put("town_size", d.getTown_size());
-                    res.add(object);
-                    break;
-                case "earnings":
-                    object.put("earnings", d.getEarnings());
-                    res.add(object);
-                    break;
-            }
-        }
-        return res;
-    }
+    final String SQL_GET_PA_COUNT_BY_YEAR = "SELECT extract(year from questionnaire.sending_data) as year,project.absolvent.data.proffesional_activity, COUNT(project.absolvent.data.proffesional_activity) FROM project.absolvent.data JOIN project.absolvent.questionnaire ON project.absolvent.data.questionnaire_id = project.absolvent.questionnaire.questionnaire_id GROUP BY project.absolvent.questionnaire.sending_data, project.absolvent.data.proffesional_activity ORDER BY year;";
+    final String SQL_GET_POE_COUNT_BY_YEAR = "SELECT extract(year from questionnaire.sending_data) as year,project.absolvent.data.period_of_employement, COUNT(project.absolvent.data.period_of_employement) FROM project.absolvent.data JOIN project.absolvent.questionnaire ON project.absolvent.data.questionnaire_id = project.absolvent.questionnaire.questionnaire_id GROUP BY project.absolvent.questionnaire.sending_data, project.absolvent.data.period_of_employement;";
+    final String SQL_GET_JS_COUNT_BY_YEAR ="SELECT extract(year from questionnaire.sending_data) as year,project.absolvent.data.job_satisfaction, COUNT(project.absolvent.data.job_satisfaction) FROM project.absolvent.data JOIN project.absolvent.questionnaire ON project.absolvent.data.questionnaire_id = project.absolvent.questionnaire.questionnaire_id GROUP BY project.absolvent.questionnaire.sending_data, project.absolvent.data.job_satisfaction;";
+    final String SQL_GET_T_COUNT_BY_YEAR ="SELECT extract(year from questionnaire.sending_data) as year,project.absolvent.data.title, COUNT(project.absolvent.data.title) FROM project.absolvent.data JOIN project.absolvent.questionnaire ON project.absolvent.data.questionnaire_id = project.absolvent.questionnaire.questionnaire_id GROUP BY project.absolvent.questionnaire.sending_data, project.absolvent.data.title;";
+    final String SQL_GET_E_COUNT_BY_YEAR ="SELECT extract(year from questionnaire.sending_data) as year,project.absolvent.data.earnings, COUNT(project.absolvent.data.earnings) FROM project.absolvent.data JOIN project.absolvent.questionnaire ON project.absolvent.data.questionnaire_id = project.absolvent.questionnaire.questionnaire_id GROUP BY project.absolvent.questionnaire.sending_data, project.absolvent.data.earnings;";
 
-    // TODO: Return all data.
-    public List<Data> findAll()
-    {
-        //try {
-            String sql_query = "SELECT * FROM absolvent.data";
-            System.out.println("Query: " + sql_query + "\n");
-            return jdbcTemplate.query(sql_query, new DataRowMapper());
-       // }catch (Exception ex)
-        //{
-        //    return null;
-       // }
-    }
+    final String SQL_GET_E_COUNT_BY_SEX ="SELECT project.absolvent.data.gender, project.absolvent.data.earnings, COUNT(project.absolvent.data.earnings) FROM project.absolvent.data GROUP BY project.absolvent.data.gender, project.absolvent.data.earnings ORDER BY project.absolvent.data.gender ASC, project.absolvent.data.earnings DESC;";
+    final String SQL_GET_JST_COUNT_BY_SEX ="SELECT project.absolvent.data.gender, project.absolvent.data.job_search_time, COUNT(project.absolvent.data.job_search_time) FROM project.absolvent.data GROUP BY project.absolvent.data.gender, project.absolvent.data.job_search_time ORDER BY project.absolvent.data.gender ASC;";
+    final String SQL_GET_CS_COUNT_BY_SEX ="SELECT project.absolvent.data.gender, project.absolvent.data.company_size, COUNT(project.absolvent.data.company_size) FROM project.absolvent.data GROUP BY project.absolvent.data.gender, project.absolvent.data.company_size ORDER BY project.absolvent.data.gender ASC, count ASC;";
+    final String SQL_GET_T_COUNT_BY_SEX ="SELECT project.absolvent.data.gender, project.absolvent.data.training, COUNT(project.absolvent.data.training) FROM project.absolvent.data GROUP BY project.absolvent.data.gender, project.absolvent.data.training ORDER BY project.absolvent.data.gender ASC, count ASC;";
+    final String SQL_GET_TS_COUNT_BY_SEX ="SELECT project.absolvent.data.gender, project.absolvent.data.town_size, COUNT(project.absolvent.data.town_size) as count FROM project.absolvent.data GROUP BY project.absolvent.data.gender, project.absolvent.data.town_size ORDER BY project.absolvent.data.gender ASC, count ASC;";
 
-    // TODO: Get salary by gender and year.
-    public List<Data> getAllByGenderAndYear(String gender,Integer year) {
-        try
-        {
-            String sql_query = "SELECT * FROM absolvent.data WHERE gender ='"+gender+"' AND ending_date = "+year;
-            System.out.println("Query: "+sql_query+"\n");
-            return jdbcTemplate.query(sql_query, new DataRowMapper());
-        } catch (Exception ex)
-        {
-            return null;
-        }
-    }
+    final String SQL_GET_CS_COUNT_BY_EARNINGS ="SELECT project.absolvent.data.earnings, project.absolvent.data.company_size, COUNT(project.absolvent.data.company_size) FROM project.absolvent.data GROUP BY project.absolvent.data.earnings, project.absolvent.data.company_size ORDER BY count ASC  ";
+    final String SQL_GET_TS_COUNT_BY_EARNINGS ="SELECT project.absolvent.data.earnings, project.absolvent.data.town_size, COUNT(project.absolvent.data.town_size) FROM project.absolvent.data GROUP BY project.absolvent.data.earnings, project.absolvent.data.town_size ORDER BY count ASC  ";
+    final String SQL_GET_CC_COUNT_BY_EARNINGS ="SELECT project.absolvent.data.earnings, project.absolvent.data.company_category, COUNT(project.absolvent.data.company_category) FROM project.absolvent.data GROUP BY project.absolvent.data.earnings, project.absolvent.data.company_category ORDER BY count ASC  ";
+    final String SQL_GET_FACULTY_COUNT_BY_EARNINGS ="SELECT project.absolvent.data.earnings, project.absolvent.data.faculty, COUNT(project.absolvent.data.faculty) FROM project.absolvent.data GROUP BY project.absolvent.data.earnings, project.absolvent.data.faculty ORDER BY count ASC  ";
+    final String SQL_GET_T_COUNT_BY_EARNINGS ="SELECT project.absolvent.data.earnings, project.absolvent.data.title, COUNT(project.absolvent.data.title) FROM project.absolvent.data GROUP BY project.absolvent.data.earnings, project.absolvent.data.title ORDER BY count ASC  ";
+    final String SQL_GET_FIELD_COUNT_BY_EARNINGS ="SELECT project.absolvent.data.earnings, project.absolvent.data.field, COUNT(project.absolvent.data.field) FROM project.absolvent.data GROUP BY project.absolvent.data.earnings, project.absolvent.data.field ORDER BY count ASC  ";
 
-    // TODO: Get period of employement by gender and year.
-    public List<JSONObject> getPeriodOfEmployementByGenderAndYear(String gender,Integer year)
-    {
-        try
-        {
-            String sql_query = "SELECT * FROM absolvent.data WHERE gender ='"+ gender+"' AND ending_date = "+year;
-            System.out.println("Query: "+sql_query+"\n");
-            return getColumnValuesToJSONArray(jdbcTemplate.query(sql_query,new DataRowMapper()),"period_of_employement");
-        } catch (Exception ex)
-        {
-            return null;
-        }
-    }
+    final String SQL_GET_CC_COUNT_BY_FACULTY ="SELECT project.absolvent.data.faculty, project.absolvent.data.company_category, COUNT(project.absolvent.data.company_category) FROM project.absolvent.data GROUP BY project.absolvent.data.faculty, project.absolvent.data.company_category ORDER BY project.absolvent.data.faculty ASC  ";
+    final String SQL_GET_JST_COUNT_BY_FACULTY ="SELECT project.absolvent.data.faculty, project.absolvent.data.job_search_time, COUNT(project.absolvent.data.job_search_time) FROM project.absolvent.data GROUP BY project.absolvent.data.faculty, project.absolvent.data.job_search_time ORDER BY project.absolvent.data.faculty ASC  ";
+    final String SQL_GET_JS_COUNT_BY_FACULTY ="SELECT project.absolvent.data.faculty, project.absolvent.data.job_satisfaction, COUNT(project.absolvent.data.job_satisfaction) FROM project.absolvent.data GROUP BY project.absolvent.data.faculty, project.absolvent.data.job_satisfaction ORDER BY project.absolvent.data.faculty ASC  ";
 
-    // TODO: Get company category.
-    public List<JSONObject> getCompanyCategoryByGenderAndYear(String gender,Integer year)
-    {
-        try
-        {
-            String sql_query = "SELECT * FROM absolvent.data WHERE gender ='"+ gender+"' AND ending_date = "+year;
-            System.out.println("Query: "+sql_query+"\n");
-            return getColumnValuesToJSONArray(jdbcTemplate.query(sql_query, new DataRowMapper()), "company_category");
-        } catch (Exception ex)
-        {
-            return null;
-        }
-    }
-
-    // TODO: Get company size.
-    public List<JSONObject> getCompanySizeByGenderAndYear(String gender,Integer year)
-    {
-        try
-        {
-            String sql_query = "SELECT * FROM absolvent.data WHERE gender ='"+ gender+"' AND ending_date = "+year;
-            System.out.println("Query: "+sql_query+"\n");
-            return getColumnValuesToJSONArray(jdbcTemplate.query(sql_query, new DataRowMapper()), "company_size");
-        } catch (Exception ex)
-        {
-            return null;
-        }
-    }
-
-    // TODO: Get job search time.
-    public List<JSONObject> getJobSearchTimeByGenderAndYear(String gender,Integer year)
-    {
-        try
-        {
-            String sql_query = "SELECT * FROM absolvent.data WHERE gender ='"+ gender+"' AND ending_date = "+year;
-            System.out.println("Query: "+sql_query+"\n");
-            return getColumnValuesToJSONArray(jdbcTemplate.query(sql_query, new DataRowMapper()), "job_search_time");
-        } catch (Exception ex)
-        {
-            return null;
-        }
-    }
-
-    // TODO: Get salary.
-    public List<JSONObject> getSalaryByGenderAndYear(String gender,Integer year)
-    {
-        try
-        {
-            String sql_query = "SELECT * FROM absolvent.data WHERE gender ='"+ gender+"' AND ending_date = "+year;
-            System.out.println("Query: "+sql_query+"\n");
-            return getColumnValuesToJSONArray(jdbcTemplate.query(sql_query, new DataRowMapper()), "earnings");
-        } catch (Exception ex)
-        {
-            return null;
-        }
-    }
 
     public boolean sendData(Integer endingDate, String gender, String earning, String companySize, String townSize, String companyCategory, String jobSearchTime, String periodOfEmployment, String field,String faculty ,String title, Integer questionnarieId, boolean location, boolean proffesionalActivity, String jobSatisfaction, boolean training)
     {
@@ -229,6 +72,7 @@ public class DataRepository
                 ps.setBoolean(13,proffesionalActivity);
                 ps.setString(14,jobSatisfaction);
                 ps.setBoolean(15,training);
+                ps.setInt(16, questionnarieId);
                 return ps;
             },keyHolder);
             return true;
@@ -238,4 +82,229 @@ public class DataRepository
             return false;
         }
     }
+
+    /*
+     *
+     * BY YEAR
+     *
+     */
+    public List<Results> getPaCountByYear()
+    {
+        List<Results> PA =  jdbcTemplate.query(SQL_GET_PA_COUNT_BY_YEAR,activityRowMaperYear);
+        return PA;
+    }
+
+    public List<Results> getPoeCountByYear()
+    {
+        List<Results> PoE =  jdbcTemplate.query(SQL_GET_POE_COUNT_BY_YEAR,poeRowMaperYear);
+        return PoE;
+    }
+
+    public List<Results> getJsCountByYear()
+    {
+        List<Results> JS =  jdbcTemplate.query(SQL_GET_JS_COUNT_BY_YEAR,JSRowMaperYear);
+        return JS;
+    }
+
+    public List<Results> getTCountByYear()
+    {
+        List<Results> T =  jdbcTemplate.query(SQL_GET_T_COUNT_BY_YEAR,TRowMaperYear);
+        return T;
+    }
+
+    public List<Results> getECountByYear()
+    {
+        List<Results> E =  jdbcTemplate.query(SQL_GET_E_COUNT_BY_YEAR,ERowMaperYear);
+        return E;
+    }
+
+    private RowMapper<Results> activityRowMaperYear = ((rs, rowNum) -> {
+        return new Results(rs.getInt("year"),
+                rs.getBoolean("proffesional_activity"),
+                rs.getInt("count"));
+    });
+    private RowMapper<Results> poeRowMaperYear = ((rs, rowNum) -> {
+        return new Results(rs.getInt("year"),
+                rs.getString("period_of_employement"),
+                rs.getInt("count"));
+    });
+    private RowMapper<Results> JSRowMaperYear = ((rs, rowNum) -> {
+        return new Results(rs.getInt("year"),
+                rs.getString("job_satisfaction"),
+                rs.getInt("count"));
+    });
+    private RowMapper<Results> TRowMaperYear = ((rs, rowNum) -> {
+        return new Results(rs.getInt("year"),
+                rs.getString("title"),
+                rs.getInt("count"));
+    });
+    private RowMapper<Results> ERowMaperYear = ((rs, rowNum) -> {
+        return new Results(rs.getInt("year"),
+                rs.getString("earnings"),
+                rs.getInt("count"));
+    });
+
+
+    /*
+     *
+     * BY SEX
+     *
+     */
+    public List<Results> getECountBySex()
+    {
+        List<Results> E = jdbcTemplate.query(SQL_GET_E_COUNT_BY_SEX, eRowMaperSex);
+        return E;
+    }
+    public List<Results> getJstCountBySex()
+    {
+        List<Results> JST = jdbcTemplate.query(SQL_GET_JST_COUNT_BY_SEX, jstRowMaperSex);
+        return JST;
+    }
+    public List<Results> getCsCountBySex()
+    {
+        List<Results> CS = jdbcTemplate.query(SQL_GET_CS_COUNT_BY_SEX, csRowMaperSex);
+        return CS;
+    }
+    public List<Results> getTCountBySex()
+    {
+        List<Results> T = jdbcTemplate.query(SQL_GET_T_COUNT_BY_SEX, tRowMaperSex);
+        return T;
+    }
+    public List<Results> getTsCountBySex()
+    {
+        List<Results> TS = jdbcTemplate.query(SQL_GET_TS_COUNT_BY_SEX, tsRowMaperSex);
+        return TS;
+    }
+
+    private RowMapper<Results> eRowMaperSex = ((rs, rowNum) -> {
+        return new Results(rs.getString("gender"),
+                rs.getString("earnings"),
+                rs.getInt("count"));
+    });
+    private RowMapper<Results> jstRowMaperSex = ((rs, rowNum) -> {
+        return new Results(rs.getString("gender"),
+                rs.getString("job_search_time"),
+                rs.getInt("count"));
+    });
+    private RowMapper<Results> csRowMaperSex = ((rs, rowNum) -> {
+        return new Results(rs.getString("gender"),
+                rs.getString("company_size"),
+                rs.getInt("count"));
+    });
+    private RowMapper<Results> tRowMaperSex = ((rs, rowNum) -> {
+        return new Results(rs.getString("gender"),
+                rs.getBoolean("training"),
+                rs.getInt("count"));
+    });
+    private RowMapper<Results> tsRowMaperSex = ((rs, rowNum) -> {
+        return new Results(rs.getString("gender"),
+                rs.getString("town_size"),
+                rs.getInt("count"));
+    });
+
+    /*
+     *
+     * BY EARNINGS
+     *
+     */
+    public List<Results> getCsCountByEarnings()
+    {
+        List<Results> CS = jdbcTemplate.query(SQL_GET_CS_COUNT_BY_EARNINGS, csRowMaperEarnings);
+        return CS;
+    }
+    public List<Results> getTsCountByEarnings()
+    {
+        List<Results> TS = jdbcTemplate.query(SQL_GET_TS_COUNT_BY_EARNINGS, tsRowMaperEarnings);
+        return TS;
+    }
+    public List<Results> getCcCountByEarnings()
+    {
+        List<Results> CC = jdbcTemplate.query(SQL_GET_CC_COUNT_BY_EARNINGS, ccRowMaperEarnings);
+        return CC;
+    }
+    public List<Results> getFacultyCountByEarnings()
+    {
+        List<Results> FACULTY = jdbcTemplate.query(SQL_GET_FACULTY_COUNT_BY_EARNINGS, facultyRowMaperEarnings);
+        return FACULTY;
+    }
+    public List<Results> getTCountByEarnings()
+    {
+        List<Results> T = jdbcTemplate.query(SQL_GET_T_COUNT_BY_EARNINGS, tRowMaperEarnings);
+        return T;
+    }
+    public List<Results> getFieldCountByEarnings()
+    {
+        List<Results> FIELD = jdbcTemplate.query(SQL_GET_FIELD_COUNT_BY_EARNINGS, fieldRowMaperEarnings);
+        return FIELD;
+    }
+
+
+    private RowMapper<Results> csRowMaperEarnings = ((rs, rowNum) -> {
+        return new Results(rs.getString("earnings"),
+                rs.getString("company_size"),
+                rs.getInt("count"));
+    });
+    private RowMapper<Results> tsRowMaperEarnings = ((rs, rowNum) -> {
+        return new Results(rs.getString("earnings"),
+                rs.getString("town_size"),
+                rs.getInt("count"));
+    });
+    private RowMapper<Results> ccRowMaperEarnings = ((rs, rowNum) -> {
+        return new Results(rs.getString("earnings"),
+                rs.getString("company_category"),
+                rs.getInt("count"));
+    });
+    private RowMapper<Results> facultyRowMaperEarnings = ((rs, rowNum) -> {
+        return new Results(rs.getString("earnings"),
+                rs.getString("faculty"),
+                rs.getInt("count"));
+    });
+    private RowMapper<Results> tRowMaperEarnings = ((rs, rowNum) -> {
+        return new Results(rs.getString("earnings"),
+                rs.getString("title"),
+                rs.getInt("count"));
+    });
+    private RowMapper<Results> fieldRowMaperEarnings = ((rs, rowNum) -> {
+        return new Results(rs.getString("earnings"),
+                rs.getString("field"),
+                rs.getInt("count"));
+    });
+
+
+    /*
+     *
+     * BY FACULTY
+     *
+     */
+    public List<Results> getCcCountByFaculty()
+    {
+        List<Results> CC = jdbcTemplate.query(SQL_GET_CC_COUNT_BY_FACULTY, ccRowMaperFaculty);
+        return CC;
+    }
+    public List<Results> getJstCountByFaculty()
+    {
+        List<Results> JST = jdbcTemplate.query(SQL_GET_JST_COUNT_BY_FACULTY, jstRowMaperFaculty);
+        return JST;
+    }
+    public List<Results> getJsCountByFaculty()
+    {
+        List<Results> JS = jdbcTemplate.query(SQL_GET_JS_COUNT_BY_FACULTY, jsRowMaperFaculty);
+        return JS;
+    }
+
+    private RowMapper<Results> ccRowMaperFaculty = ((rs, rowNum) -> {
+        return new Results(rs.getString("faculty"),
+                rs.getString("company_category"),
+                rs.getInt("count"));
+    });
+    private RowMapper<Results> jstRowMaperFaculty = ((rs, rowNum) -> {
+        return new Results(rs.getString("faculty"),
+                rs.getString("job_search_time"),
+                rs.getInt("count"));
+    });
+    private RowMapper<Results> jsRowMaperFaculty = ((rs, rowNum) -> {
+        return new Results(rs.getString("faculty"),
+                rs.getString("job_satisfaction"),
+                rs.getInt("count"));
+    });
 }

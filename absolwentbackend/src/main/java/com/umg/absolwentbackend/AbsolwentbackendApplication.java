@@ -15,18 +15,6 @@ public class AbsolwentbackendApplication implements WebMvcConfigurer {
         SpringApplication.run(AbsolwentbackendApplication.class, args);
     }
 
-
-    /*
-    @Bean
-    public FilterRegistrationBean<AuthFilter> filterRegistrationBean() {
-        FilterRegistrationBean<AuthFilter> registrationBean = new FilterRegistrationBean<>();
-        // AuthFilter authFilter = new AuthFilter();
-        //registrationBean.setFilter(authFilter);
-        //registrationBean.addUrlPatterns("/api/*");
-        return registrationBean;
-    }
-    */
-
     @Override
     public void addCorsMappings(CorsRegistry registry) {
         registry.addMapping("/**")
