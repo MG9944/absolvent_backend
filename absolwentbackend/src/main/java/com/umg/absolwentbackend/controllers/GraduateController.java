@@ -110,6 +110,7 @@ public class GraduateController {
     @PostMapping("/survey")
     public ResponseEntity<Map<String,Object>> sendMail(@RequestBody Map<String, Object> graduateMap) {
         String groupName=(String)graduateMap.get("group_name");
+        Integer validDays=(Integer) graduateMap.get("valid_days");
         List<Map<String, Object>> graduateEmails = graduateRepository.findGroupEmails(groupName);
         Group group = null;
         try{
@@ -124,7 +125,7 @@ public class GraduateController {
         String bodyTemplate = "Link do ankiety ";
         String title = "Ankieta dla UMG";
 
-        if(groupName.isEmpty()) {
+        if(groupName.isEmpty() || validDays==null) {
             Map<String, Object> map = new HashMap<>();
             map.put("success", false);
             map.put("status", 500);
@@ -132,7 +133,7 @@ public class GraduateController {
         }
         //Wysyłanie emaila
         for (Map<String, Object> emailMap : graduateEmails){
-            String token = generateSurveyToken(emailMap.get("email").toString(),emailMap.get("field").toString(),emailMap.get("faculty").toString(),emailMap.get("title").toString(), (Integer) emailMap.get("graduation_year"), (String) emailMap.get("gender"));
+            String token = generateSurveyToken(emailMap.get("email").toString(),emailMap.get("field").toString(),emailMap.get("faculty").toString(),emailMap.get("title").toString(), (Integer) emailMap.get("graduation_year"), (String) emailMap.get("gender"),validDays);
 
             String body = bodyTemplate;
             try {
@@ -152,7 +153,7 @@ public class GraduateController {
         return new ResponseEntity<>(map, HttpStatus.OK);
     }
 
-    private String generateSurveyToken(String email,String field,String faculty,String title,Integer graduation_year,String gender){
+    private String generateSurveyToken(String email,String field,String faculty,String title,Integer graduation_year,String gender,Integer validDays){
         long timestamp = System.currentTimeMillis();
         SecretKey key = Keys.hmacShaKeyFor(Decoders.BASE64.decode(Constants.API_SECRET_KEY));
         String token = Jwts.builder().signWith(key)
