@@ -25,7 +25,7 @@ public class ResetPasswordController {
     public ResponseEntity<Map<String,Object>> sendMail(@RequestBody Map<String, Object> universityMap) {
         String universityEmail = (String) universityMap.get("email");
         String title = "Prośba o zmiane hasła";
-        String body = "Wiadomość";//Tu powinien być link do zmiany hasła
+        String body = "Wiadomość";
 
         //Wysyłanie emaila
         try {

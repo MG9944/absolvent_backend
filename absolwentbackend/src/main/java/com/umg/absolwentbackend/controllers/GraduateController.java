@@ -122,8 +122,6 @@ public class GraduateController {
             return  new ResponseEntity<>(map, HttpStatus.BAD_REQUEST);
         }
 
-        String bodyTemplate = "Link do ankiety ";
-        String title = "Ankieta dla UMG";
 
         if(groupName.isEmpty() || validDays==null) {
             Map<String, Object> map = new HashMap<>();
@@ -135,10 +133,9 @@ public class GraduateController {
         for (Map<String, Object> emailMap : graduateEmails){
             String token = generateSurveyToken(emailMap.get("email").toString(),emailMap.get("field").toString(),emailMap.get("faculty").toString(),emailMap.get("title").toString(), (Integer) emailMap.get("graduation_year"), (String) emailMap.get("gender"),validDays);
 
-            String body = bodyTemplate;
             try {
-                body += "https://absolwent.best/survey"+"?token="+token;
-                emailSender.sendEmail(emailMap.get("email").toString(), title, body);
+                Constants.EMAIL_BODY += Constants.SURVEY_LINK+"?token="+token;
+                emailSender.sendEmail(emailMap.get("email").toString(), Constants.EMAIL_TITLE, Constants.EMAIL_BODY);
 
             } catch (Exception e) {
                 Map<String, Object> map = new HashMap<>();
