@@ -17,10 +17,6 @@ public class GraduateService {
 
     @Autowired
     GraduateRepository graduateRepository;
-
-    public List<Map<String, Object>> getAll(){
-        return graduateRepository.getAll();
-    }
     public boolean delete(int graduate_id) {
 
         return graduateRepository.delete(graduate_id);

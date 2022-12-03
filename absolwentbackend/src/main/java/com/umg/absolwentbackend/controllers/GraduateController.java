@@ -15,6 +15,7 @@ import io.jsonwebtoken.security.Keys;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -43,6 +44,40 @@ public class GraduateController {
     @Autowired
     private GroupService groupService;
 
+   @DeleteMapping("/graduate/delete")
+   public ResponseEntity<Map<String,Object>> delete(HttpServletRequest request, @RequestBody Map<String, Object> paramMap) {
+       int graduate_id = Integer.parseInt(paramMap.get("graduateId").toString());
+           var success = graduateService.delete(graduate_id);
+           if (!success) {
+               Map<String, Object> map = new HashMap<>();
+               map.put("success", false);
+               map.put("message", "");
+               return new ResponseEntity<>(map, HttpStatus.BAD_REQUEST);
+           }
+           Map<String, Object> map = new HashMap<>();
+           map.put("success", true);
+           return new ResponseEntity<>(map, HttpStatus.OK);
+   }
+
+    @GetMapping("/graduate/list")
+    public ResponseEntity<Map<String,Object>> getAll(HttpServletRequest request) {
+            List<Graduate> success = graduateRepository.getAll();
+            if (success != null) {
+                Map<String, Object> map = new HashMap<>();
+                map.put("success", true);
+                map.put("graduate", success);
+                return new ResponseEntity<>(map, HttpStatus.OK);
+            }
+            if (success == null) {
+                Map<String, Object> map = new HashMap<>();
+                map.put("success", false);
+                map.put("message", "ERR");
+                return new ResponseEntity<>(map, HttpStatus.BAD_REQUEST);
+            }
+            Map<String, Object> map = new HashMap<>();
+            map.put("success", true);
+            return new ResponseEntity<>(map, HttpStatus.OK);
+    }
 
     @PostMapping("/graduate")
     public ResponseEntity<Map<String,Object>> addGraduate(@RequestBody Map<String, Object> graduateMap)
@@ -101,7 +136,6 @@ public class GraduateController {
 
             String body = bodyTemplate;
             try {
-                System.out.println(emailMap.get("email").toString());
                 body += "https://absolwent.best/survey"+"?token="+token;
                 emailSender.sendEmail(emailMap.get("email").toString(), title, body);
 

@@ -3,6 +3,7 @@ package com.umg.absolwentbackend.repositories;
 import com.umg.absolwentbackend.controllers.GraduateController;
 import com.umg.absolwentbackend.exceptions.AuthenticationException;
 import com.umg.absolwentbackend.models.Graduate;
+import com.umg.absolwentbackend.models.Results;
 import com.umg.absolwentbackend.models.University;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
@@ -72,8 +73,9 @@ public class GraduateRepository {
         return jdbcTemplate.queryForList(SQL_GET_EMAILS,group_name);
     }
 
-    public List<Map<String, Object>> getAll() {
-        return jdbcTemplate.queryForList(SQL_GET_GRADUATES);
+    public List<Graduate> getAll() {
+        List<Graduate> graduate = jdbcTemplate.query(SQL_GET_GRADUATES, graduateRowMapper);
+        return graduate;
     }
 
     public boolean delete(int graduate_id) {
@@ -96,5 +98,4 @@ public class GraduateRepository {
                 rs.getString("faculty"),
                 rs.getString("group_name"));
     });
-
 }
