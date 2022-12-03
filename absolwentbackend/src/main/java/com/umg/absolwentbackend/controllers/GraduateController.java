@@ -51,7 +51,7 @@ public class GraduateController {
            if (!success) {
                Map<String, Object> map = new HashMap<>();
                map.put("success", false);
-               map.put("message", "");
+               map.put("message", "No student specified");
                return new ResponseEntity<>(map, HttpStatus.BAD_REQUEST);
            }
            Map<String, Object> map = new HashMap<>();
@@ -71,7 +71,7 @@ public class GraduateController {
             if (success == null) {
                 Map<String, Object> map = new HashMap<>();
                 map.put("success", false);
-                map.put("message", "ERR");
+                map.put("message", "No student data available");
                 return new ResponseEntity<>(map, HttpStatus.BAD_REQUEST);
             }
             Map<String, Object> map = new HashMap<>();
