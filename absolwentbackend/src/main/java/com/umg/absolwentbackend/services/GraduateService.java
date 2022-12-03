@@ -18,6 +18,14 @@ public class GraduateService {
     @Autowired
     GraduateRepository graduateRepository;
 
+    public List<Map<String, Object>> getAll(){
+        return graduateRepository.getAll();
+    }
+    public boolean delete(int graduate_id) {
+
+        return graduateRepository.delete(graduate_id);
+    }
+
     public Graduate addGraduate(String name, String lastName, String email, int graduation_year, String faculty, String field, String title,String group,String gender) throws AuthenticationException {
         Integer count = graduateRepository.countbyemail(email);
         if(count>0) {
@@ -26,5 +34,7 @@ public class GraduateService {
         Integer userid = graduateRepository.insertGraduate(name,lastName,email,graduation_year,faculty,field,title,group,gender);
         return graduateRepository.findbyid(userid);
     }
+
+
 
 }

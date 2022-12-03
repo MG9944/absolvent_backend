@@ -26,7 +26,7 @@ import java.util.Map;
 
 
 @RestController
-@RequestMapping("/api/survey"/*Do uzupełnienia?*/)
+@RequestMapping("/api/survey")
 public class QuestionnarieController {
 
     @Autowired

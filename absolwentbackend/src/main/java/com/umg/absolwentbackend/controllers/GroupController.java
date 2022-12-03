@@ -2,8 +2,6 @@ package com.umg.absolwentbackend.controllers;
 
 
 
-import com.umg.absolwentbackend.exceptions.AuthenticationException;
-import com.umg.absolwentbackend.models.Group;
 import com.umg.absolwentbackend.services.GroupService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -23,7 +21,7 @@ public class GroupController {
     GroupService groupService;
 
     @PostMapping("")
-    public ResponseEntity<Map<String, Object>> getAll(HttpServletRequest request, @RequestBody Map<String, Object> paramMap, @RequestParam(value = "force", required = false) String forceParam) {
+    public ResponseEntity<Map<String, Object>> getAll(HttpServletRequest request, @RequestBody Map<String, Object> paramMap, String forceParam) {
         boolean permissions = (boolean) request.getAttribute("admin");
         String group_name = (String) paramMap.get("group_name");
         Integer questionnaireFrequency = (Integer) paramMap.get("questionnaireFrequency");

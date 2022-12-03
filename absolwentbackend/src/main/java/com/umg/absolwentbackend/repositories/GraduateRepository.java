@@ -30,6 +30,9 @@ public class GraduateRepository {
     private static final String SQL_FIND_BY_EMAIL = "SELECT email FROM graduate WHERE email=?";
     private static final String SQL_GET_EMAILS = "SELECT email,graduation_year,field,faculty,title,gender  FROM absolvent.graduate where group_name=?";
 
+    private static final String SQL_GET_GRADUATES = "SELECT date_of_birth, email, name, lastname, graduation_year, faculty, field, title, graduate_id, group_name, gender FROM absolvent.graduate";
+    private static final String SQL_DELETE_GRADUATE = "DELETE FROM absolvent.graduate WHERE graduate.graduate_id=?";
+
     public Integer insertGraduate(String name, String lastName, String email, int graduation_year, String faculty, String field,String title,String group,String gender) throws AuthenticationException
     {
         try {
@@ -69,9 +72,18 @@ public class GraduateRepository {
         return jdbcTemplate.queryForList(SQL_GET_EMAILS,group_name);
     }
 
+    public List<Map<String, Object>> getAll() {
+        return jdbcTemplate.queryForList(SQL_GET_GRADUATES);
+    }
 
-
-
+    public boolean delete(int graduate_id) {
+        try {
+            jdbcTemplate.update(SQL_DELETE_GRADUATE,graduate_id);
+            return true;
+        }catch (Exception ex){
+            return false;
+        }
+    }
     private RowMapper<Graduate> graduateRowMapper = ((rs, rowNum) -> {
         return new Graduate(rs.getInt("graduate_id"),
                 rs.getString("name"),
