@@ -65,7 +65,7 @@ public class GraduateController {
             if (success != null) {
                 Map<String, Object> map = new HashMap<>();
                 map.put("success", true);
-                map.put("graduate", success);
+                map.put("graduates", success);
                 return new ResponseEntity<>(map, HttpStatus.OK);
             }
             if (success == null) {

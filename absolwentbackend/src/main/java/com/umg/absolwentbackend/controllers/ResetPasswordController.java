@@ -50,8 +50,13 @@ public class ResetPasswordController {
         //Zmiana hasła w bazie
         String hashedPass = BCrypt.hashpw(newPassword,BCrypt.gensalt(10));
         try {
+            if (newPassword.length() < 8) {
+                Map<String, Object> map = new HashMap<>();
+                map.put("error", true);
+                map.put("message", "Password is too short");
+                return new ResponseEntity<>(map, HttpStatus.BAD_REQUEST);
+            }
             universityRepository.updatePassword(hashedPass);
-
             Map<String, Object> map = new HashMap<>();
             map.put("success", true);
             //map.put("value", newPassword);
