@@ -2,6 +2,9 @@ package com.umg.absolwentbackend.controllers;
 
 
 
+import com.umg.absolwentbackend.models.Graduate;
+import com.umg.absolwentbackend.models.Group;
+import com.umg.absolwentbackend.repositories.GroupRepository;
 import com.umg.absolwentbackend.services.GroupService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -14,12 +17,26 @@ import java.util.List;
 import java.util.Map;
 
 @RestController
-@RequestMapping("/api/admin/pool")
+@RequestMapping("/api/admin")
 public class GroupController {
 
     @Autowired
     GroupService groupService;
-
+    GroupRepository groupRepository;
+    @GetMapping("/group/list")
+    public ResponseEntity<Map<String,Object>> getAll(HttpServletRequest request) {
+        List<Group> success = groupRepository.getAllGroup();
+        if (success == null) {
+            Map<String, Object> map = new HashMap<>();
+            map.put("success", false);
+            map.put("message", "No groups data available");
+            return new ResponseEntity<>(map, HttpStatus.BAD_REQUEST);
+        }
+        Map<String, Object> map = new HashMap<>();
+        map.put("success", true);
+        map.put("groups", success);
+        return new ResponseEntity<>(map, HttpStatus.OK);
+    }
     @PostMapping("")
     public ResponseEntity<Map<String, Object>> getAll(HttpServletRequest request, @RequestBody Map<String, Object> paramMap, String forceParam) {
         boolean permissions = (boolean) request.getAttribute("admin");

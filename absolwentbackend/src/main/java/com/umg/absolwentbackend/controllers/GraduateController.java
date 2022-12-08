@@ -62,12 +62,6 @@ public class GraduateController {
     @GetMapping("/graduate/list")
     public ResponseEntity<Map<String,Object>> getAll(HttpServletRequest request) {
             List<Graduate> success = graduateRepository.getAll();
-            if (success != null) {
-                Map<String, Object> map = new HashMap<>();
-                map.put("success", true);
-                map.put("graduates", success);
-                return new ResponseEntity<>(map, HttpStatus.OK);
-            }
             if (success == null) {
                 Map<String, Object> map = new HashMap<>();
                 map.put("success", false);
@@ -76,6 +70,7 @@ public class GraduateController {
             }
             Map<String, Object> map = new HashMap<>();
             map.put("success", true);
+            map.put("graduates", success);
             return new ResponseEntity<>(map, HttpStatus.OK);
     }
 
@@ -150,12 +145,70 @@ public class GraduateController {
         return new ResponseEntity<>(map, HttpStatus.OK);
     }
 
+    @PostMapping("/group/survey")
+    public ResponseEntity<Map<String,Object>> sendMailToGraduatesInGroup(@RequestBody Map<String, Object> graduateMap) {
+        String groupName=(String)graduateMap.get("group_name");
+        List<Map<String, Object>> graduateEmails = graduateRepository.findGroupEmails(groupName);
+        Group group = null;
+        try{
+            group = groupService.validateGroup(groupName);
+        }catch (Exception e){
+            Map<String,Object> map = new HashMap<>();
+            map.put("success", false);
+            map.put("message", e.getMessage());
+            return  new ResponseEntity<>(map, HttpStatus.BAD_REQUEST);
+        }
+
+
+        if(groupName.isEmpty()) {
+            Map<String, Object> map = new HashMap<>();
+            map.put("success", false);
+            map.put("status", 500);
+            return new ResponseEntity<>(map, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+        //Wysyłanie emaila
+        for (Map<String, Object> emailMap : graduateEmails){
+            String token = generateSurveyTokenWithoutValidDays(emailMap.get("email").toString(),emailMap.get("field").toString(),emailMap.get("faculty").toString(),emailMap.get("title").toString(), (Integer) emailMap.get("graduation_year"), (String) emailMap.get("gender"));
+
+            try {
+                Constants.EMAIL_BODY += Constants.SURVEY_LINK+"?token="+token;
+                emailSender.sendEmail(emailMap.get("email").toString(), Constants.EMAIL_TITLE, Constants.EMAIL_BODY);
+
+            } catch (Exception e) {
+                Map<String, Object> map = new HashMap<>();
+                map.put("success", false);
+                map.put("status", 500);
+                return new ResponseEntity<>(map, HttpStatus.INTERNAL_SERVER_ERROR);
+            }
+        }
+        Map<String, Object> map = new HashMap<>();
+        map.put("success", true);
+        map.put("status", 200);
+        return new ResponseEntity<>(map, HttpStatus.OK);
+    }
+
     private String generateSurveyToken(String email,String field,String faculty,String title,Integer graduation_year,String gender,Integer validDays){
         long timestamp = System.currentTimeMillis();
         SecretKey key = Keys.hmacShaKeyFor(Decoders.BASE64.decode(Constants.API_SECRET_KEY));
         String token = Jwts.builder().signWith(key)
                 .setIssuedAt(new Date(timestamp))
                 .setExpiration(new Date(timestamp + (Constants.SURVEY_TOKEN_VALIDITY * validDays)))
+                .claim("email", email)
+                .claim("field", field)
+                .claim("faculty", faculty)
+                .claim("title", title)
+                .claim("graduationYear", graduation_year)
+                .claim("gender", gender)
+                .compact();
+        return token;
+    }
+
+    private String generateSurveyTokenWithoutValidDays(String email,String field,String faculty,String title,Integer graduation_year,String gender){
+        long timestamp = System.currentTimeMillis();
+        SecretKey key = Keys.hmacShaKeyFor(Decoders.BASE64.decode(Constants.API_SECRET_KEY));
+        String token = Jwts.builder().signWith(key)
+                .setIssuedAt(new Date(timestamp))
+                .setExpiration(new Date(timestamp + (Constants.SURVEY_TOKEN_VALIDITY)))
                 .claim("email", email)
                 .claim("field", field)
                 .claim("faculty", faculty)

@@ -1,6 +1,7 @@
 package com.umg.absolwentbackend.repositories;
 
 import com.umg.absolwentbackend.exceptions.AuthenticationException;
+import com.umg.absolwentbackend.models.Graduate;
 import com.umg.absolwentbackend.models.Group;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
@@ -22,12 +23,17 @@ public class GroupRepository {
     private static final String SQL_POST = "INSERT INTO absolvent.groups(group_name, questionnaire_frequency) VALUES (?, ?)";
     private static final String SQL_DELETE_BY_GROUP_NAME = "DELETE FROM absolvent.groups WHERE group_name=?";
     private static final String SQL_NEXT_SENDING_DATE ="SELECT questionnaire_frequency,questionnaire_frequency FROM absolvent.graduate inner join absolvent.groups on graduate.group_name=absolvent.groups.group_name WHERE absolvent.groups.group_name=?";
-
+    private static final String SQL_GET_NAME = "SELECT group_name FROM absolvent.groups";
     @Autowired
     JdbcTemplate jdbcTemplate;
 
     public List<Map<String, Object>> findByGroupName(String groupName){
         return jdbcTemplate.queryForList(SQL_FIND_BY_GROUP_NAME, groupName);
+    }
+
+    public List<Group> getAllGroup() {
+        List<Group> group = jdbcTemplate.query(SQL_GET_NAME, groupNameRowMapper);
+        return group;
     }
 
     public Group findByName(String groupName)  throws AuthenticationException
