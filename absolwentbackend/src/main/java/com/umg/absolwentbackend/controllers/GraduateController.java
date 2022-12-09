@@ -77,7 +77,7 @@ public class GraduateController {
     @PostMapping("/graduate")
     public ResponseEntity<Map<String,Object>> addGraduate(@RequestBody Map<String, Object> graduateMap)
     {
-         String name = (String) graduateMap.get("firstName");
+         String name = (String) graduateMap.get("name");
          String lastname = (String) graduateMap.get("lastName");
          //Date date_of_birth = Date.valueOf(LocalDate.parse((CharSequence) graduateMap.get("dateOfBirth")));
          String email = (String) graduateMap.get("email");
