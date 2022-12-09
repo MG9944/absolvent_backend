@@ -46,7 +46,7 @@ public class DataController
                         tMaps.add(new HashMap<>());
                         eMaps.add(new HashMap<>());
                     }
-                    paMaps.get(years.indexOf(R.getFilling_year())).put(R.getBoolValue().toString(), R.getCount());
+                    paMaps.get(years.indexOf(R.getFilling_year())).put(R.getStringValue().toString(), R.getCount());
                 }
                 List = dataRepository.getPoeCountByYear();
                 for (Results R:List) {
