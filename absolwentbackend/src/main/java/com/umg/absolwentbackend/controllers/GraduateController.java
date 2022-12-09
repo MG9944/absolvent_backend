@@ -45,10 +45,8 @@ public class GraduateController {
     private GroupService groupService;
 
    @DeleteMapping("/graduate/delete")
-   @PostMapping("/graduate/delete")
    public ResponseEntity<Map<String,Object>> delete(HttpServletRequest request, @RequestBody Map<String, Object> paramMap) {
-       Map<String,Object> data = (Map<String,Object>) paramMap.get("data");
-       int graduate_id = Integer.parseInt(data.get("graduateId").toString());
+       int graduate_id = Integer.parseInt(paramMap.get("graduateId").toString());
            var success = graduateService.delete(graduate_id);
            if (!success) {
                Map<String, Object> map = new HashMap<>();
@@ -79,7 +77,7 @@ public class GraduateController {
     @PostMapping("/graduate")
     public ResponseEntity<Map<String,Object>> addGraduate(@RequestBody Map<String, Object> graduateMap)
     {
-         String name = (String) graduateMap.get("name");
+         String name = (String) graduateMap.get("firstName");
          String lastname = (String) graduateMap.get("lastName");
          //Date date_of_birth = Date.valueOf(LocalDate.parse((CharSequence) graduateMap.get("dateOfBirth")));
          String email = (String) graduateMap.get("email");
