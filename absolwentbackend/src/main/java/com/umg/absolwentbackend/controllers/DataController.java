@@ -87,7 +87,7 @@ public class DataController
                 ArrayList<Map<String,Object>> eMaps = new ArrayList<>();
                 ArrayList<Map<String,Object>> jstMaps = new ArrayList<>();
                 ArrayList<Map<String,Object>> csMaps = new ArrayList<>();
-                ArrayList<Map<Boolean,Object>> tMaps = new ArrayList<>();
+                ArrayList<Map<String,Object>> tMaps = new ArrayList<>();
                 ArrayList<Map<String,Object>> tsMaps = new ArrayList<>();
                 List<Results> List = dataRepository.getECountBySex();
                 for (Results R:List) {
@@ -111,7 +111,7 @@ public class DataController
                 }
                 List = dataRepository.getTCountBySex();
                 for (Results R:List) {
-                    tMaps.get(sexes.indexOf(R.getStringKey())).put(R.getBoolValue(), R.getCount());
+                    tMaps.get(sexes.indexOf(R.getStringKey())).put(R.getStringValue(), R.getCount());
                 }
                 List = dataRepository.getTsCountBySex();
                 for (Results R:List) {
