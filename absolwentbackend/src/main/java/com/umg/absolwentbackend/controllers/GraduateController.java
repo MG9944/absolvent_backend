@@ -47,7 +47,8 @@ public class GraduateController {
    @DeleteMapping("/graduate/delete")
    @PostMapping("/graduate/delete")
    public ResponseEntity<Map<String,Object>> delete(HttpServletRequest request, @RequestBody Map<String, Object> paramMap) {
-       int graduate_id = Integer.parseInt(paramMap.get("id").toString());
+       Map<String,Object> data = (Map<String,Object>) paramMap.get("data");
+       int graduate_id = Integer.parseInt(data.get("graduateId").toString());
            var success = graduateService.delete(graduate_id);
            if (!success) {
                Map<String, Object> map = new HashMap<>();
@@ -78,16 +79,17 @@ public class GraduateController {
     @PostMapping("/graduate")
     public ResponseEntity<Map<String,Object>> addGraduate(@RequestBody Map<String, Object> graduateMap)
     {
-         String name = (String) graduateMap.get("name");
-         String lastname = (String) graduateMap.get("lastName");
+        Map<String,Object> data = (Map<String,Object>) graduateMap.get("data");
+         String name = (String) data.get("name");
+         String lastname = (String) data.get("lastName");
          //Date date_of_birth = Date.valueOf(LocalDate.parse((CharSequence) graduateMap.get("dateOfBirth")));
-         String email = (String) graduateMap.get("email");
-         int graduation_year = (Integer) graduateMap.get("graduationYear");
-         String field = (String) graduateMap.get("field");
-         String title = (String) graduateMap.get("title");
-         String faculty = (String) graduateMap.get("faculty");
-         String group = (String) graduateMap.get("group");
-         String gender = (String) graduateMap.get("gender");
+         String email = (String) data.get("email");
+         int graduation_year = (Integer) data.get("graduationYear");
+         String field = (String) data.get("field");
+         String title = (String) data.get("title");
+         String faculty = (String) data.get("faculty");
+         String group = (String) data.get("group");
+         String gender = (String) data.get("gender");
          Graduate graduate = null;
          try{
              graduate = graduateService.addGraduate(name,lastname,email,graduation_year,faculty,field,title,group,gender);
@@ -105,8 +107,9 @@ public class GraduateController {
 
     @PostMapping("/survey")
     public ResponseEntity<Map<String,Object>> sendMail(@RequestBody Map<String, Object> graduateMap) {
-        String groupName=(String)graduateMap.get("group_name");
-        Integer validDays=(Integer) graduateMap.get("valid_days");
+        Map<String,Object> data=(Map<String,Object>)graduateMap.get("data");
+        String groupName = (String)data.get("group_name");
+        Integer validDays=(Integer) data.get("valid_days");
         List<Map<String, Object>> graduateEmails = graduateRepository.findGroupEmails(groupName);
         Group group = null;
         try{
@@ -148,7 +151,8 @@ public class GraduateController {
 
     @PostMapping("/group/survey")
     public ResponseEntity<Map<String,Object>> sendMailToGraduatesInGroup(@RequestBody Map<String, Object> graduateMap) {
-        String groupName=(String)graduateMap.get("group_name");
+        Map<String,Object> data=(Map<String,Object>)graduateMap.get("data");
+        String groupName = (String)data.get("group_name");
         List<Map<String, Object>> graduateEmails = graduateRepository.findGroupEmails(groupName);
         Group group = null;
         try{
