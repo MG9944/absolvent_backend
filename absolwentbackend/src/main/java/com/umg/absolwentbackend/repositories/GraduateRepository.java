@@ -47,7 +47,7 @@ public class GraduateRepository {
                 ps.setString(5,faculty);
                 ps.setString(6,field);
                 ps.setString(7,title);
-                ps.setString(8,group);
+                ps.setString(8,"BASE");
                 ps.setString(9,gender);
                 return ps;
             },keyHolder);
