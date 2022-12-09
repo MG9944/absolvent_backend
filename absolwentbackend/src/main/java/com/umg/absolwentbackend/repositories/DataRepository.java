@@ -120,7 +120,7 @@ public class DataRepository
 
     private RowMapper<Results> activityRowMaperYear = ((rs, rowNum) -> {
         return new Results(rs.getInt("year"),
-                rs.getBoolean("proffesional_activity"),
+                rs.getString("proffesional_activity"),
                 rs.getInt("count"));
     });
     private RowMapper<Results> poeRowMaperYear = ((rs, rowNum) -> {
