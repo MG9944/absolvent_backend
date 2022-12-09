@@ -44,7 +44,7 @@ public class QuestionnarieController {
 
         Integer endingDate = (Integer) userMap.get("endingDate");
         String gender = (String) userMap.get("gender");
-        String earning = (String) userMap.get("earning");
+        String earning = (String) userMap.get("earnings");
         String companySize = (String) userMap.get("companySize");
         String townSize = (String) userMap.get("townSize");
         String companyCategory = (String) userMap.get("companyCategory");

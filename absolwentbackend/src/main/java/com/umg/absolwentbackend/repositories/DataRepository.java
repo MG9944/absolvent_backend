@@ -24,7 +24,7 @@ public class DataRepository
     @Autowired
     JdbcTemplate jdbcTemplate;
 
-    final String SQL_ADD = "INSERT INTO absolvent.data(ending_date, gender, earnings, company_size, town_size, company_category, job_search_time, period_of_employement,field,faculty,title, location, proffesional_activity, job_satisfaction, training, questionnarieId) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);";
+    final String SQL_ADD = "INSERT INTO absolvent.data(ending_date, gender, earnings, company_size, town_size, company_category, job_search_time, period_of_employement,field,faculty,title, location, proffesional_activity, job_satisfaction, training) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);";
 
     final String SQL_GET_PA_COUNT_BY_YEAR = "SELECT extract(year from questionnaire.sending_data) as year,project.absolvent.data.proffesional_activity, COUNT(project.absolvent.data.proffesional_activity) FROM project.absolvent.data JOIN project.absolvent.questionnaire ON project.absolvent.data.questionnaire_id = project.absolvent.questionnaire.questionnaire_id GROUP BY project.absolvent.questionnaire.sending_data, project.absolvent.data.proffesional_activity ORDER BY year;";
     final String SQL_GET_POE_COUNT_BY_YEAR = "SELECT extract(year from questionnaire.sending_data) as year,project.absolvent.data.period_of_employement, COUNT(project.absolvent.data.period_of_employement) FROM project.absolvent.data JOIN project.absolvent.questionnaire ON project.absolvent.data.questionnaire_id = project.absolvent.questionnaire.questionnaire_id GROUP BY project.absolvent.questionnaire.sending_data, project.absolvent.data.period_of_employement;";
@@ -72,7 +72,7 @@ public class DataRepository
                 ps.setString(13,proffesionalActivity);
                 ps.setString(14,jobSatisfaction);
                 ps.setString(15,training);
-                ps.setInt(16, questionnarieId);
+                //ps.setInt(16, questionnarieId);
                 return ps;
             },keyHolder);
             return true;
