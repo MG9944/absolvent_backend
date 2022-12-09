@@ -55,9 +55,9 @@ public class QuestionnarieController {
         String title = (String) userMap.get("title");
         String jobSatisfaction = (String) userMap.get("jobSatisfaction");
         Integer questionnarieId = (Integer) userMap.get("questionnarieId");
-        boolean location = (boolean) userMap.get("location");
-        boolean proffesionalActivity = (boolean) userMap.get("proffesionalActivity");
-        boolean training = (boolean) userMap.get("training");
+        String location = (String) userMap.get("location");
+        String proffesionalActivity = (String) userMap.get("proffesionalActivity");
+        String training = (String) userMap.get("training");
         boolean added = dataService.sendData(endingDate, gender, earning, companySize, townSize, companyCategory, jobSearchTime, periodOfEmployment,field,faculty,title,questionnarieId, location, proffesionalActivity, jobSatisfaction, training);
 
         if (added) {

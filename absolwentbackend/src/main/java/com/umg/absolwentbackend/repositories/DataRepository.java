@@ -50,7 +50,7 @@ public class DataRepository
     final String SQL_GET_JS_COUNT_BY_FACULTY ="SELECT project.absolvent.data.faculty, project.absolvent.data.job_satisfaction, COUNT(project.absolvent.data.job_satisfaction) FROM project.absolvent.data GROUP BY project.absolvent.data.faculty, project.absolvent.data.job_satisfaction ORDER BY project.absolvent.data.faculty ASC  ";
 
 
-    public boolean sendData(Integer endingDate, String gender, String earning, String companySize, String townSize, String companyCategory, String jobSearchTime, String periodOfEmployment, String field,String faculty ,String title, Integer questionnarieId, boolean location, boolean proffesionalActivity, String jobSatisfaction, boolean training)
+    public boolean sendData(Integer endingDate, String gender, String earning, String companySize, String townSize, String companyCategory, String jobSearchTime, String periodOfEmployment, String field,String faculty ,String title, Integer questionnarieId, String location, String proffesionalActivity, String jobSatisfaction, String training)
     {
         try
         {
@@ -68,10 +68,10 @@ public class DataRepository
                 ps.setString(9,field);
                 ps.setString(10,faculty);
                 ps.setString(11,title);
-                ps.setBoolean(12,location);
-                ps.setBoolean(13,proffesionalActivity);
+                ps.setString(12,location);
+                ps.setString(13,proffesionalActivity);
                 ps.setString(14,jobSatisfaction);
-                ps.setBoolean(15,training);
+                ps.setString(15,training);
                 ps.setInt(16, questionnarieId);
                 return ps;
             },keyHolder);

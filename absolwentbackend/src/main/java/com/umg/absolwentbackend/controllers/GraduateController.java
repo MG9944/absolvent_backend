@@ -125,21 +125,7 @@ public class GraduateController {
             return new ResponseEntity<>(map, HttpStatus.INTERNAL_SERVER_ERROR);
         }
         //Wysyłanie emaila
-        for (Map<String, Object> emailMap : graduateEmails){
-            String token = generateSurveyToken(emailMap.get("email").toString(),emailMap.get("field").toString(),emailMap.get("faculty").toString(),emailMap.get("title").toString(), (Integer) emailMap.get("graduation_year"), (String) emailMap.get("gender"),validDays);
-
-            try {
-                Constants.EMAIL_BODY += Constants.SURVEY_LINK+"?token="+token;
-                emailSender.sendEmail(emailMap.get("email").toString(), Constants.EMAIL_TITLE, Constants.EMAIL_BODY);
-                Constants.EMAIL_BODY = "";
-
-            } catch (Exception e) {
-                Map<String, Object> map = new HashMap<>();
-                map.put("success", false);
-                map.put("status", 500);
-                return new ResponseEntity<>(map, HttpStatus.INTERNAL_SERVER_ERROR);
-            }
-        }
+        new sendMails(graduateEmails,validDays).start();
         Map<String, Object> map = new HashMap<>();
         map.put("success", true);
         map.put("status", 200);
@@ -168,55 +154,14 @@ public class GraduateController {
             return new ResponseEntity<>(map, HttpStatus.INTERNAL_SERVER_ERROR);
         }
         //Wysyłanie emaila
-        for (Map<String, Object> emailMap : graduateEmails){
-            String token = generateSurveyTokenWithoutValidDays(emailMap.get("email").toString(),emailMap.get("field").toString(),emailMap.get("faculty").toString(),emailMap.get("title").toString(), (Integer) emailMap.get("graduation_year"), (String) emailMap.get("gender"));
-
-            try {
-                Constants.EMAIL_BODY += Constants.SURVEY_LINK+"?token="+token;
-                emailSender.sendEmail(emailMap.get("email").toString(), Constants.EMAIL_TITLE, Constants.EMAIL_BODY);
-                Constants.EMAIL_BODY = "";
-            } catch (Exception e) {
-                Map<String, Object> map = new HashMap<>();
-                map.put("success", false);
-                map.put("status", 500);
-                return new ResponseEntity<>(map, HttpStatus.INTERNAL_SERVER_ERROR);
-            }
-        }
+        new sendMails(graduateEmails,1).start();
         Map<String, Object> map = new HashMap<>();
         map.put("success", true);
         map.put("status", 200);
         return new ResponseEntity<>(map, HttpStatus.OK);
     }
 
-    private String generateSurveyToken(String email,String field,String faculty,String title,Integer graduation_year,String gender,Integer validDays){
-        long timestamp = System.currentTimeMillis();
-        SecretKey key = Keys.hmacShaKeyFor(Decoders.BASE64.decode(Constants.API_SECRET_KEY));
-        String token = Jwts.builder().signWith(key)
-                .setIssuedAt(new Date(timestamp))
-                .setExpiration(new Date(timestamp + (Constants.SURVEY_TOKEN_VALIDITY * validDays)))
-                .claim("email", email)
-                .claim("field", field)
-                .claim("faculty", faculty)
-                .claim("title", title)
-                .claim("graduationYear", graduation_year)
-                .claim("gender", gender)
-                .compact();
-        return token;
-    }
 
-    private String generateSurveyTokenWithoutValidDays(String email,String field,String faculty,String title,Integer graduation_year,String gender){
-        long timestamp = System.currentTimeMillis();
-        SecretKey key = Keys.hmacShaKeyFor(Decoders.BASE64.decode(Constants.API_SECRET_KEY));
-        String token = Jwts.builder().signWith(key)
-                .setIssuedAt(new Date(timestamp))
-                .setExpiration(new Date(timestamp + (Constants.SURVEY_TOKEN_VALIDITY)))
-                .claim("email", email)
-                .claim("field", field)
-                .claim("faculty", faculty)
-                .claim("title", title)
-                .claim("graduationYear", graduation_year)
-                .claim("gender", gender)
-                .compact();
-        return token;
-    }
+
+
 }

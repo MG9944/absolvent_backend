@@ -15,7 +15,7 @@ public class DataService {
     @Autowired
     DataRepository dataRepository;
 
-    public boolean sendData(Integer endingDate, String gender, String earning, String companySize, String townSize, String companyCategory, String jobSearchTime, String periodOfEmployment, String field,String faculty ,String title, Integer questionnarieId, boolean location, boolean proffesionalActivity, String jobSatisfaction, boolean training)  {
+    public boolean sendData(Integer endingDate, String gender, String earning, String companySize, String townSize, String companyCategory, String jobSearchTime, String periodOfEmployment, String field,String faculty ,String title, Integer questionnarieId, String location, String proffesionalActivity, String jobSatisfaction, String training)  {
         return dataRepository.sendData(endingDate, gender, earning, companySize, townSize, companyCategory, jobSearchTime, periodOfEmployment, field, faculty, title, questionnarieId, location, proffesionalActivity,  jobSatisfaction, training);
     }
 
