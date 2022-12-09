@@ -16,9 +16,9 @@ public class Data implements Serializable
     private String job_search_time;
     private String job_satisfaction;
     private String period_of_employment;
-    private boolean training;
-    private boolean location;
-    private boolean proffesional_activity;
+    private String training;
+    private String location;
+    private String proffesional_activity;
     private int data_id;
 
 
@@ -27,7 +27,7 @@ public class Data implements Serializable
 
     }
 
-    public Data(Integer ending_date, String gender, String earnings, String company_size, String town_size, String company_category, String job_search_time, String job_satisfaction, String period_of_employment, boolean training, boolean location, boolean proffesional_activity, int data_id) {
+    public Data(Integer ending_date, String gender, String earnings, String company_size, String town_size, String company_category, String job_search_time, String job_satisfaction, String period_of_employment, String training, String location, String proffesional_activity, int data_id) {
         this.ending_date = ending_date;
         this.gender = gender;
         this.earnings = earnings;
@@ -80,15 +80,15 @@ public class Data implements Serializable
         return period_of_employment;
     }
 
-    public boolean isTraining() {
+    public String isTraining() {
         return training;
     }
 
-    public boolean isLocation() {
+    public String isLocation() {
         return location;
     }
 
-    public boolean isProffesional_activity() {
+    public String isProffesional_activity() {
         return proffesional_activity;
     }
 
