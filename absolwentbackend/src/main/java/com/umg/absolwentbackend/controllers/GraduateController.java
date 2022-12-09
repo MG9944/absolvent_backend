@@ -135,6 +135,7 @@ public class GraduateController {
             try {
                 Constants.EMAIL_BODY += Constants.SURVEY_LINK+"?token="+token;
                 emailSender.sendEmail(emailMap.get("email").toString(), Constants.EMAIL_TITLE, Constants.EMAIL_BODY);
+                Constants.EMAIL_BODY = "";
 
             } catch (Exception e) {
                 Map<String, Object> map = new HashMap<>();
@@ -178,7 +179,7 @@ public class GraduateController {
             try {
                 Constants.EMAIL_BODY += Constants.SURVEY_LINK+"?token="+token;
                 emailSender.sendEmail(emailMap.get("email").toString(), Constants.EMAIL_TITLE, Constants.EMAIL_BODY);
-
+                Constants.EMAIL_BODY = "";
             } catch (Exception e) {
                 Map<String, Object> map = new HashMap<>();
                 map.put("success", false);
