@@ -46,7 +46,7 @@ public class GraduateController {
 
    @DeleteMapping("/graduate/delete")
    public ResponseEntity<Map<String,Object>> delete(HttpServletRequest request, @RequestBody Map<String, Object> paramMap) {
-       int graduate_id = Integer.parseInt(paramMap.get("graduateId").toString());
+       int graduate_id = (Integer) paramMap.get("graduateId");
            var success = graduateService.delete(graduate_id);
            if (!success) {
                Map<String, Object> map = new HashMap<>();
@@ -81,7 +81,7 @@ public class GraduateController {
          String lastname = (String) graduateMap.get("lastName");
          //Date date_of_birth = Date.valueOf(LocalDate.parse((CharSequence) graduateMap.get("dateOfBirth")));
          String email = (String) graduateMap.get("email");
-         int graduation_year = (Integer) graduateMap.get("graduationYear");
+         int graduation_year = Integer.parseInt(graduateMap.get("graduationYear").toString());
          String field = (String) graduateMap.get("field");
          String title = (String) graduateMap.get("title");
          String faculty = (String) graduateMap.get("faculty");
