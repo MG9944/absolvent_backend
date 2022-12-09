@@ -20,29 +20,31 @@ public class sendMails extends Thread{
     List<Map<String, Object>> graduateEmails;
     Integer validDays;
 
-    @Autowired
     private EmailService emailSender;
 
-    public sendMails(List<Map<String, Object>> graduateEmails,Integer validDays) {
+    public sendMails(List<Map<String, Object>> graduateEmails,Integer validDays,EmailService emailSender)
+    {
         this.graduateEmails = graduateEmails;
         this.validDays = validDays;
+        this.emailSender=emailSender;
     }
 
     @Override
     public void run() {
-        for (Map<String, Object> emailMap : graduateEmails){
+        for (Map<String, Object> emailMap : this.graduateEmails){
             String token = generateSurveyToken(emailMap.get("email").toString(),emailMap.get("field").toString(),emailMap.get("faculty").toString(),emailMap.get("title").toString(), (Integer) emailMap.get("graduation_year"), (String) emailMap.get("gender"),validDays);
 
-            try {
+            //try {
                 Constants.EMAIL_BODY += Constants.SURVEY_LINK+"?token="+token;
                 emailSender.sendEmail(emailMap.get("email").toString(), Constants.EMAIL_TITLE, Constants.EMAIL_BODY);
+                System.out.println(emailMap.get("email"));
                 Constants.EMAIL_BODY = "";
 
-            } catch (Exception e) {
+            //} catch (Exception e) {
                 Map<String, Object> map = new HashMap<>();
                 map.put("success", false);
                 map.put("status", 500);
-            }
+            //}
         }
     }
 

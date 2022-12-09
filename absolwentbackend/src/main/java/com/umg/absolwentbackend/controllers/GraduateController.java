@@ -125,7 +125,7 @@ public class GraduateController {
             return new ResponseEntity<>(map, HttpStatus.INTERNAL_SERVER_ERROR);
         }
         //Wysyłanie emaila
-        new sendMails(graduateEmails,validDays).start();
+        new sendMails(graduateEmails,validDays,emailSender).start();
         Map<String, Object> map = new HashMap<>();
         map.put("success", true);
         map.put("status", 200);
@@ -154,7 +154,7 @@ public class GraduateController {
             return new ResponseEntity<>(map, HttpStatus.INTERNAL_SERVER_ERROR);
         }
         //Wysyłanie emaila
-        new sendMails(graduateEmails,1).start();
+        new sendMails(graduateEmails,1,emailSender).start();
         Map<String, Object> map = new HashMap<>();
         map.put("success", true);
         map.put("status", 200);
