@@ -106,7 +106,7 @@ public class GraduateController {
 
     @PostMapping("/survey")
     public ResponseEntity<Map<String,Object>> sendMail(@RequestBody Map<String, Object> graduateMap) {
-        String groupName = (String) graduateMap.get("groupName");
+        String groupName = (String) graduateMap.get("group_name");
         Integer validDays=(Integer) graduateMap.get("valid_days");
         List<Map<String, Object>> graduateEmails = graduateRepository.findGroupEmails(groupName);
         Group group = null;
@@ -150,7 +150,7 @@ public class GraduateController {
 
     @PostMapping("/group/survey")
     public ResponseEntity<Map<String,Object>> sendMailToGraduatesInGroup(@RequestBody Map<String, Object> graduateMap) {
-        String groupName = (String)graduateMap.get("groupName");
+        String groupName = (String)graduateMap.get("group_name");
         List<Map<String, Object>> graduateEmails = graduateRepository.findGroupEmails(groupName);
         Group group = null;
         try{
