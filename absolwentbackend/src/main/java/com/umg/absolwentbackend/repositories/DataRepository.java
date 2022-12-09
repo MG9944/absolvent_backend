@@ -193,7 +193,7 @@ public class DataRepository
     });
     private RowMapper<Results> tRowMaperSex = ((rs, rowNum) -> {
         return new Results(rs.getString("gender"),
-                rs.getBoolean("training"),
+                rs.getString("training"),
                 rs.getInt("count"));
     });
     private RowMapper<Results> tsRowMaperSex = ((rs, rowNum) -> {
