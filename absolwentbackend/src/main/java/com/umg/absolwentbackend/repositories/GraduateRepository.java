@@ -53,7 +53,7 @@ public class GraduateRepository {
             },keyHolder);
             return (Integer) keyHolder.getKeys().get("graduate_id");
 
-       }catch (Exception e)
+        }catch (Exception e)
         {
             throw new AuthenticationException("Invalid details. Failed to add graduate");
         }
